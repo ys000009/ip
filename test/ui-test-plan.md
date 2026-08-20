@@ -76,7 +76,7 @@ Now you have 1 tasks in the list.
 OhNo!! ERROR :( --> there is no task numbered 2.
 Nice! I've marked this task as done:
   [T][X] borrow book
-OhNo!! ERROR :( --> please provide a task number. Use: mark NUMBER or unmark NUMBER
+OhNo!! ERROR :( --> please provide a task number. Use: mark/unmark/delete NUMBER
 Here are the tasks in your list:
 1.[T][X] borrow book
 OK, I've marked this task as not done yet:
@@ -171,4 +171,40 @@ Here are the tasks in your list:
 1.[T][ ] borrow book
 2.[D][ ] return book (by: Sunday)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+```
+
+## Test case: Delete a task
+
+Aim: Verify that delete removes the correct task and renumbers the remaining list.
+
+### Inputs
+
+```text
+todo borrow book
+deadline return book /by Sunday
+event project meeting /from Mon 2pm /to 4pm
+delete 2
+list
+delete 5
+```
+
+### Expected output
+
+```text
+Got it. I've added this task:
+[T][ ] borrow book
+Now you have 1 tasks in the list.
+Got it. I've added this task:
+[D][ ] return book (by: Sunday)
+Now you have 2 tasks in the list.
+Got it. I've added this task:
+[E][ ] project meeting (from: Mon 2pm to: 4pm)
+Now you have 3 tasks in the list.
+Noted. I've removed this task:
+  [D][ ] return book (by: Sunday)
+Now you have 2 tasks in the list.
+Here are the tasks in your list:
+1.[T][ ] borrow book
+2.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+OhNo!! ERROR :( --> there is no task numbered 5.
 ```
