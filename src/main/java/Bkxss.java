@@ -12,7 +12,7 @@ public class Bkxss {
     public static void main(String[] args) {
         String botPrefix = "     ";
         String divider = "    ____________________________________________________________";
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int numberOfTasks = 0;
         String banner = "____  _                   \n"
                 + "| __ )| | ____  _____ ___ \n"
@@ -39,11 +39,24 @@ public class Bkxss {
                 }
 
                 if (command.equals("list")) {
+                    System.out.println(botPrefix + "Here are the tasks in your list:");
                     for (int i = 0; i < numberOfTasks; i++) {
-                        System.out.println(botPrefix + (i + 1) + ". " + tasks[i]);
+                        System.out.println(botPrefix + (i + 1) + "." + tasks[i]);
                     }
+                } else if (command.startsWith("mark ")) {
+                    int taskNumber = Integer.parseInt(command.substring(5));
+                    Task task = tasks[taskNumber - 1];
+                    task.markAsDone();
+                    System.out.println(botPrefix + "Nice! I've marked this task as done:");
+                    System.out.println(botPrefix + "  " + task);
+                } else if (command.startsWith("unmark ")) {
+                    int taskNumber = Integer.parseInt(command.substring(7));
+                    Task task = tasks[taskNumber - 1];
+                    task.markAsNotDone();
+                    System.out.println(botPrefix + "OK, I've marked this task as not done yet:");
+                    System.out.println(botPrefix + "  " + task);
                 } else {
-                    tasks[numberOfTasks] = command;
+                    tasks[numberOfTasks] = new Task(command);
                     numberOfTasks++;
                     System.out.println(botPrefix + "added: " + command);
                 }
