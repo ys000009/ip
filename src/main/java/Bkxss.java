@@ -5,13 +5,15 @@ import java.util.Scanner;
  */
 public class Bkxss {
     /**
-     * Greets the user, echoes each command, and exits when the user enters {@code bye}.
+     * Greets the user, stores task descriptions, lists stored tasks, and exits when the user enters {@code bye}.
      *
      * @param args command-line arguments, which are not used by this application
      */
     public static void main(String[] args) {
         String botPrefix = "     ";
         String divider = "    ____________________________________________________________";
+        String[] tasks = new String[100];
+        int numberOfTasks = 0;
         String banner = "____  _                   \n"
                 + "| __ )| | ____  _____ ___ \n"
                 + "|  _ \\| |/ /\\ \\/ / __/ __|\n"
@@ -31,12 +33,20 @@ public class Bkxss {
 
                 System.out.println(divider);
                 if (command.equals("bye")) {
-                    System.out.println(botPrefix + "See you :3");
+                    System.out.println(botPrefix + "Bye. Hope to see you again soon!");
                     System.out.println(divider);
                     return;
                 }
 
-                System.out.println(botPrefix + command);
+                if (command.equals("list")) {
+                    for (int i = 0; i < numberOfTasks; i++) {
+                        System.out.println(botPrefix + (i + 1) + ". " + tasks[i]);
+                    }
+                } else {
+                    tasks[numberOfTasks] = command;
+                    numberOfTasks++;
+                    System.out.println(botPrefix + "added: " + command);
+                }
                 System.out.println(divider);
             }
         }
