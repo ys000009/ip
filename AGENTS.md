@@ -40,3 +40,8 @@ the first expected-versus-actual mismatch if the test session fails.
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
+
+## Testing requirements
+* When adding or modifying features, add test cases to `test/ui-test-plan.md` that interleave valid and invalid inputs, to verify that invalid inputs do not corrupt internal state (e.g., the task list).
+* Before considering a task complete, run the `test-ui` skill (or manually verify) that all test cases pass.
+* Periodically verify test effectiveness: introduce a deliberate bug, confirm the test plan catches it, then revert the bug.

@@ -24,6 +24,15 @@ public abstract class Task {
         return (isDone ? "X" : " "); // mark done task with X
     }
 
+    /**
+     * Returns whether this task has been marked as completed.
+     *
+     * @return {@code true} if the task is done, {@code false} otherwise
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
     /** Marks this task as completed. */
     public void markAsDone() {
         this.isDone = true;
@@ -33,5 +42,4 @@ public abstract class Task {
     public void markAsNotDone() {
         this.isDone = false;
     }
-
 }
