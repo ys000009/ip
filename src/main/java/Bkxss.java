@@ -55,10 +55,26 @@ public class Bkxss {
                     task.markAsNotDone();
                     System.out.println(botPrefix + "OK, I've marked this task as not done yet:");
                     System.out.println(botPrefix + "  " + task);
-                } else {
-                    tasks[numberOfTasks] = new Task(command);
+                } else if (command.startsWith("todo ")) {
+                    tasks[numberOfTasks] = new Todo(command.substring(5));
                     numberOfTasks++;
-                    System.out.println(botPrefix + "added: " + command);
+                    System.out.println(botPrefix + "Got it. I've added this task:");
+                    System.out.println(botPrefix + tasks[numberOfTasks - 1]);
+                    System.out.println(botPrefix + "Now you have " + numberOfTasks + " tasks in the list.");
+                } else if (command.startsWith("deadline ")) {
+                    String[] deadlineParts = command.substring(9).split(" /by ", 2);
+                    tasks[numberOfTasks] = new Deadline(deadlineParts[0], deadlineParts[1]);
+                    numberOfTasks++;
+                    System.out.println(botPrefix + "Got it. I've added this task:");
+                    System.out.println(botPrefix + tasks[numberOfTasks - 1]);
+                    System.out.println(botPrefix + "Now you have " + numberOfTasks + " tasks in the list.");
+                } else if (command.startsWith("event ")) {
+                    String[] eventParts = command.substring(6).split(" /from | /to ", 3);
+                    tasks[numberOfTasks] = new Event(eventParts[0], eventParts[1], eventParts[2]);
+                    numberOfTasks++;
+                    System.out.println(botPrefix + "Got it. I've added this task:");
+                    System.out.println(botPrefix + tasks[numberOfTasks - 1]);
+                    System.out.println(botPrefix + "Now you have " + numberOfTasks + " tasks in the list.");
                 }
                 System.out.println(divider);
             }
