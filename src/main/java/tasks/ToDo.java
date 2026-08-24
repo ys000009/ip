@@ -5,7 +5,7 @@ public class ToDo extends Task {
         super(name);
     }
 
-    public String getEntryString() {
+    public String toString() {
         return "[T]" + super.toString();
     }
 }
