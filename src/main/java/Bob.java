@@ -52,6 +52,9 @@ public class Bob {
                 for (Command c : commands) {
                     processed = processed || c.processInput(nextLine);
                 }
+                
+                // save tasks after every command
+                storage.save(tasks);
 
                 if (!processed) {
                     System.out.println("What's that?");
