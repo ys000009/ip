@@ -20,7 +20,7 @@ public class MarkCommand extends Command {
                 System.out.println("Marked as done:");
                 System.out.println(" " + this.taskList.get(taskId - 1).toString());
                 return true;
-            
+
             case "unmark":
                 try {
                     taskId = Integer.parseInt(parts[1]);
