@@ -5,11 +5,13 @@ import tasks.Deadline;
 import tasks.Event;
 import tasks.Task;
 import tasks.ToDo;
+import util.DatetimeHelper;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +19,14 @@ import java.util.List;
  * Provides persistent storage for a list of {@link Task} objects.
  * <p>
  * Tasks are stored in a text file using a type-specific format:
+ * 
  * <pre>
  * {@link ToDo}:      T | status | name
  * {@link Deadline}:  D | status | name | deadline
  * {@link Event}:     E | status | name | from | to
  * </pre>
  * </p>
- * The storage file is located at {@code ./data/tasks.txt}. 
+ * The storage file is located at {@code ./data/tasks.txt}.
  * If the file does
  * not exist when loading, an empty task list is returned.
  */
@@ -108,7 +111,7 @@ public class TaskStorage implements IStorage<ArrayList<Task>> {
                     throw new BobException("Error: Corrupted deadline format: " + line);
                 }
 
-                String deadline = parts[3];
+                LocalDateTime deadline = LocalDateTime.parse(parts[3], DatetimeHelper.ISO_FORMATTER);
                 task = new Deadline(name, deadline);
                 break;
 
@@ -117,8 +120,8 @@ public class TaskStorage implements IStorage<ArrayList<Task>> {
                     throw new BobException("Error: Corrupted event format: " + line);
                 }
 
-                String from = parts[3];
-                String to = parts[4];
+                LocalDateTime from = LocalDateTime.parse(parts[3], DatetimeHelper.ISO_FORMATTER);
+                LocalDateTime to = LocalDateTime.parse(parts[4], DatetimeHelper.ISO_FORMATTER);
 
                 task = new Event(name, from, to);
                 break;
