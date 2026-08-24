@@ -8,10 +8,19 @@ public class Deadline extends Task {
         this.deadline = deadline;
     }
 
-    public String getEntryString() {
+    public String toString() {
         return String.format(
             "[D]%s (by: %s)",
-            super.getEntryString(),
+            super.toString(),
+            this.deadline
+        );
+    }
+
+    public String export() {
+        return String.format(
+            "D | %s | %s | %s",
+            this.isDone ? 1 : 0,
+            this.name,
             this.deadline
         );
     }

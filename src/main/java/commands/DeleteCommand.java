@@ -1,15 +1,9 @@
 package commands;
 
-import java.util.ArrayList;
-
 import exceptions.BobException;
 import tasks.Task;
 
-public class DeleteCommand extends Command{
-    public DeleteCommand(ArrayList<Task> taskList) {
-        super(taskList);
-    }
-
+public class DeleteCommand extends Command {
     public boolean processInput(String input) throws BobException {
         String[] parts = input.split(" ", 2);
         if (parts[0].equals("delete")) {
@@ -18,7 +12,7 @@ public class DeleteCommand extends Command{
                 taskId = Integer.parseInt(parts[1]);
                 Task task = this.taskList.remove(taskId - 1);
                 System.out.println("Removed: ");
-                System.out.println(task.getEntryString());
+                System.out.println(task.toString());
                 System.out.println(String.format(
                     "%d %s in list",
                     this.taskList.size(),

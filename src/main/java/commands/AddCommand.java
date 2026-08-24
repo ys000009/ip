@@ -1,7 +1,5 @@
 package commands;
 
-import java.util.ArrayList;
-
 import exceptions.BobException;
 import tasks.Deadline;
 import tasks.Event;
@@ -10,10 +8,6 @@ import tasks.ToDo;
 
 
 public class AddCommand extends Command {
-    public AddCommand(ArrayList<Task> taskList) {
-        super(taskList);
-    }
-
     public boolean processInput(String input) throws BobException {
         String[] parts = input.split(" ", 2);
         String command = parts[0];
@@ -77,7 +71,7 @@ public class AddCommand extends Command {
 
     private void printAddition(Task t) {
         System.out.println("Task added:");
-        System.out.println(t.getEntryString());
+        System.out.println(t.toString());
         System.out.println(String.format(
             "%d %s in list",
             this.taskList.size(),

@@ -1,14 +1,15 @@
 package tasks;
-public class Task {
-    private String name;
-    private boolean isDone;
+
+abstract public class Task {
+    protected String name;
+    protected boolean isDone;
 
     public Task(String name) {
         this.name = name;
         this.isDone = false;
     }
 
-    public String getEntryString() {
+    public String toString() {
         return "[" + (this.isDone ? "X" : " ") + "] " + this.name;
     }
 
@@ -19,4 +20,6 @@ public class Task {
     public void unmark() {
         this.isDone = false;
     }
+
+    public abstract String export();
 }

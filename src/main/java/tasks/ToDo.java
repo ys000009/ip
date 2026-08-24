@@ -5,7 +5,15 @@ public class ToDo extends Task {
         super(name);
     }
 
-    public String getEntryString() {
-        return "[T]" + super.getEntryString();
+    public String toString() {
+        return "[T]" + super.toString();
+    }
+
+    public String export() {
+        return String.format(
+            "T | %s | %s",
+            this.isDone ? 1 : 0,
+            this.name
+        );
     }
 }
