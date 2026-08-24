@@ -2,8 +2,8 @@ package commands;
 
 import java.util.ArrayList;
 
+import exceptions.BobException;
 import tasks.Task;
-import exceptions.*;
 
 public class MarkCommand extends Command {
     public MarkCommand(ArrayList<Task> list) {

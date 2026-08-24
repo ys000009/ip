@@ -2,7 +2,7 @@ package commands;
 
 import java.util.ArrayList;
 
-import exceptions.*;
+import exceptions.ExitException;
 import tasks.Task;
 
 public class ExitCommand extends Command {

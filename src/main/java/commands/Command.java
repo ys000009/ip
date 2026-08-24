@@ -1,8 +1,9 @@
 package commands;
 import java.util.ArrayList;
 
+import exceptions.BobException;
+import exceptions.ExitException;
 import tasks.Task;
-import exceptions.*;
 
 public abstract class Command {
     protected ArrayList<Task> taskList;

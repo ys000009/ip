@@ -1,10 +1,15 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import tasks.*;
-import commands.*;
-import exceptions.*;
+import commands.AddCommand;
+import commands.Command;
+import commands.DeleteCommand;
+import commands.ExitCommand;
+import commands.ListCommand;
+import commands.MarkCommand;
+import exceptions.BobException;
+import exceptions.ExitException;
+import tasks.Task;
 
 public class Bob {
     private static ArrayList<Task> tasks = new ArrayList<>();
