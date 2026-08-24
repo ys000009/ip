@@ -15,4 +15,12 @@ public class Deadline extends Task {
             this.deadline
         );
     }
+
+    public String export() {
+        return String.format(
+            "[D] | %s | %s",
+            super.toString(),
+            this.deadline
+        );
+    }
 }

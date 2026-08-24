@@ -1,5 +1,6 @@
 package tasks;
-public class Task {
+
+abstract public class Task {
     private String name;
     private boolean isDone;
 
@@ -19,4 +20,6 @@ public class Task {
     public void unmark() {
         this.isDone = false;
     }
+
+    public abstract String export();
 }

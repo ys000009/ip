@@ -8,4 +8,11 @@ public class ToDo extends Task {
     public String toString() {
         return "[T]" + super.toString();
     }
+
+    public String export() {
+        return String.format(
+            "[T] | %s",
+            super.toString()
+        );
+    }
 }

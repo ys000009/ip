@@ -18,4 +18,13 @@ public class Event extends Task {
             this.to
         );
     }
+
+    public String export() {
+        return String.format(
+            "[D] | %s | %s | %s",
+            super.toString(),
+            this.from,
+            this.to
+        );
+    }
 }
