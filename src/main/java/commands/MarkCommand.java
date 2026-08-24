@@ -25,7 +25,7 @@ public class MarkCommand extends Command {
                     throw new BobException("Error: taskId out of bounds");
                 }
                 System.out.println("Marked as done:");
-                System.out.println(" " + this.taskList.get(taskId - 1).getEntryString());
+                System.out.println(" " + this.taskList.get(taskId - 1).toString());
                 return true;
             
             case "unmark":
@@ -38,7 +38,7 @@ public class MarkCommand extends Command {
                     throw new BobException("Error: taskId out of bounds");
                 }
                 System.out.println("Marked as not done:");
-                System.out.println(" " + this.taskList.get(taskId - 1).getEntryString());
+                System.out.println(" " + this.taskList.get(taskId - 1).toString());
                 return true;
         }
         return false;

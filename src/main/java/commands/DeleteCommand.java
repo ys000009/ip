@@ -18,7 +18,7 @@ public class DeleteCommand extends Command{
                 taskId = Integer.parseInt(parts[1]);
                 Task task = this.taskList.remove(taskId - 1);
                 System.out.println("Removed: ");
-                System.out.println(task.getEntryString());
+                System.out.println(task.toString());
                 System.out.println(String.format(
                     "%d %s in list",
                     this.taskList.size(),

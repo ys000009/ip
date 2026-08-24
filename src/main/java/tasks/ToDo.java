@@ -6,6 +6,6 @@ public class ToDo extends Task {
     }
 
     public String getEntryString() {
-        return "[T]" + super.getEntryString();
+        return "[T]" + super.toString();
     }
 }

@@ -8,7 +8,7 @@ public class Task {
         this.isDone = false;
     }
 
-    public String getEntryString() {
+    public String toString() {
         return "[" + (this.isDone ? "X" : " ") + "] " + this.name;
     }
 

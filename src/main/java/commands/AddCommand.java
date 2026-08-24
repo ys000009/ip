@@ -77,7 +77,7 @@ public class AddCommand extends Command {
 
     private void printAddition(Task t) {
         System.out.println("Task added:");
-        System.out.println(t.getEntryString());
+        System.out.println(t.toString());
         System.out.println(String.format(
             "%d %s in list",
             this.taskList.size(),

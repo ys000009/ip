@@ -10,10 +10,10 @@ public class Event extends Task {
         this.to = to;
     }
 
-    public String getEntryString() {
+    public String toString() {
         return String.format(
             "[D]%s (from: %s to: %s)",
-            super.getEntryString(),
+            super.toString(),
             this.from, 
             this.to
         );
