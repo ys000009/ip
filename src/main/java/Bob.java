@@ -9,17 +9,18 @@ import commands.ListCommand;
 import commands.MarkCommand;
 import exceptions.BobException;
 import exceptions.ExitException;
+import storage.TaskStorage;
 import tasks.Task;
 
 public class Bob {
-    private static ArrayList<Task> tasks = new ArrayList<>();
+    private static TaskStorage storage = new TaskStorage();
     private static String horiLines = "_".repeat(30);
     private static Command[] commands = {
-        new MarkCommand(tasks),
-        new ExitCommand(tasks),
-        new ListCommand(tasks),
-        new AddCommand(tasks),
-        new DeleteCommand(tasks)
+        new MarkCommand(),
+        new ExitCommand(),
+        new ListCommand(),
+        new AddCommand(),
+        new DeleteCommand()
     };
 
     public static void main(String[] args) {
@@ -29,6 +30,19 @@ public class Bob {
         System.out.println(horiLines);
 
         Scanner sc = new Scanner(System.in);
+
+        ArrayList<Task> tasks;
+        try {
+            tasks = storage.load();
+        } catch (BobException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+
+        for (Command c: commands) {
+            c.setTaskList(tasks);
+        }
+        
         while (sc.hasNextLine()) {
             String nextLine = sc.nextLine();
             System.out.println(horiLines);
