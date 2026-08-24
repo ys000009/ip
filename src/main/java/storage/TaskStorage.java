@@ -13,6 +13,20 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Provides persistent storage for a list of {@link Task} objects.
+ * <p>
+ * Tasks are stored in a text file using a type-specific format:
+ * <pre>
+ * {@link ToDo}:      T | status | name
+ * {@link Deadline}:  D | status | name | deadline
+ * {@link Event}:     E | status | name | from | to
+ * </pre>
+ * </p>
+ * The storage file is located at {@code ./data/tasks.txt}. 
+ * If the file does
+ * not exist when loading, an empty task list is returned.
+ */
 public class TaskStorage implements IStorage<ArrayList<Task>> {
 
     private static final String FILE_PATH = "./data/tasks.txt";
@@ -111,12 +125,12 @@ public class TaskStorage implements IStorage<ArrayList<Task>> {
 
             default:
                 throw new BobException("Error: Unknown task type of " + type);
-            }
-
-            if (isDone) {
-                task.mark();
-            }
-
-            return task;
         }
+
+        if (isDone) {
+            task.mark();
+        }
+
+        return task;
+    }
 }
