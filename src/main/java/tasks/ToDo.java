@@ -11,8 +11,9 @@ public class ToDo extends Task {
 
     public String export() {
         return String.format(
-            "[T] | %s",
-            super.toString()
+            "[T] | %s | %s",
+            this.isDone,
+            this.name
         );
     }
 }

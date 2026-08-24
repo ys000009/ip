@@ -1,8 +1,8 @@
 package tasks;
 
 abstract public class Task {
-    private String name;
-    private boolean isDone;
+    protected String name;
+    protected boolean isDone;
 
     public Task(String name) {
         this.name = name;

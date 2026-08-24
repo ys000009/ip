@@ -18,8 +18,9 @@ public class Deadline extends Task {
 
     public String export() {
         return String.format(
-            "[D] | %s | %s",
-            super.toString(),
+            "[D] | %s | %s | %s",
+            this.isDone,
+            this.name,
             this.deadline
         );
     }
