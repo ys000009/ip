@@ -29,12 +29,12 @@ import java.util.List;
  */
 public class TaskStorage implements IStorage<ArrayList<Task>> {
 
-    private static final String FILE_PATH = "./data/tasks.txt";
+    private static final Path FILE_PATH = Paths.get("data", "tasks.txt");
 
     private final Path path;
 
     public TaskStorage() {
-        this.path = Paths.get(FILE_PATH);
+        this.path = FILE_PATH;
     }
 
     @Override
