@@ -21,8 +21,8 @@ public class Event extends Task {
 
     public String export() {
         return String.format(
-            "[D] | %s | %s | %s | %s",
-            this.isDone,
+            "D | %s | %s | %s | %s",
+            this.isDone ? 1 : 0,
             this.name,
             this.from,
             this.to
