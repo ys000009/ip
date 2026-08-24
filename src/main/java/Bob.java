@@ -7,14 +7,14 @@ import commands.*;
 import exceptions.*;
 
 public class Bob {
-    private static ArrayList<Task> list = new ArrayList<>();
+    private static ArrayList<Task> tasks = new ArrayList<>();
     private static String horiLines = "_".repeat(30);
     private static Command[] commands = {
-        new MarkCommand(list),
-        new ExitCommand(list),
-        new ListCommand(list),
-        new AddCommand(list),
-        new DeleteCommand(list)
+        new MarkCommand(tasks),
+        new ExitCommand(tasks),
+        new ListCommand(tasks),
+        new AddCommand(tasks),
+        new DeleteCommand(tasks)
     };
     public static void main(String[] args) {
         System.out.println(horiLines);
