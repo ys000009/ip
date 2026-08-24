@@ -8,8 +8,9 @@ import tasks.Task;
 public abstract class Command {
     protected ArrayList<Task> taskList;
 
-    public Command(ArrayList<Task> taskList) {
+    public Command setTaskList(ArrayList<Task> taskList) {
         this.taskList = taskList;
+        return this;
     }
 
     public abstract boolean processInput(String input) throws BobException, ExitException;

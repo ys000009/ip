@@ -21,6 +21,7 @@ public class Bob {
         new AddCommand(tasks),
         new DeleteCommand(tasks)
     };
+
     public static void main(String[] args) {
         System.out.println(horiLines);
         System.out.println("Hello! I'm Bob.");
@@ -28,7 +29,6 @@ public class Bob {
         System.out.println(horiLines);
 
         Scanner sc = new Scanner(System.in);
-
         while (sc.hasNextLine()) {
             String nextLine = sc.nextLine();
             System.out.println(horiLines);

@@ -1,14 +1,6 @@
 package commands;
 
-import java.util.ArrayList;
-
-import tasks.Task;
-
 public class ListCommand extends Command {
-    public ListCommand(ArrayList<Task> taskList) {
-        super(taskList);
-    }
-
     public boolean processInput(String input) {
         if (input.equals("list")) {
             System.out.println("Tasks:");
@@ -16,7 +8,7 @@ public class ListCommand extends Command {
                 System.out.println(String.format(
                     "%d: %s",
                     i + 1,
-                    this.taskList.get(i).getEntryString()
+                    this.taskList.get(i).toString()
                 ));
             }
             return true;

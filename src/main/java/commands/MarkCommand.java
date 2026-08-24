@@ -1,15 +1,8 @@
 package commands;
 
-import java.util.ArrayList;
-
 import exceptions.BobException;
-import tasks.Task;
 
 public class MarkCommand extends Command {
-    public MarkCommand(ArrayList<Task> list) {
-        super(list);
-    }
-
     public boolean processInput(String input) throws BobException {
         String[] parts = input.split(" ", 2);
         String command = parts[0];
