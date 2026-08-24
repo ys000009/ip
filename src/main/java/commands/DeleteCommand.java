@@ -14,17 +14,16 @@ public class DeleteCommand extends Command {
                 System.out.println("Removed: ");
                 System.out.println(task.toString());
                 System.out.println(String.format(
-                    "%d %s in list",
-                    this.taskList.size(),
-                    this.taskList.size() < 2 ? "item" : "items"
-                ));
+                        "%d %s in list",
+                        this.taskList.size(),
+                        this.taskList.size() < 2 ? "item" : "items"));
             } catch (NumberFormatException e) {
                 throw new BobException("Error: Argument must be an integer");
             } catch (IndexOutOfBoundsException e) {
                 throw new BobException(
-                    """
-                    Error: taskId out of bounds
-                    """);
+                        """
+                                Error: taskId out of bounds
+                                """);
             }
             return true;
         }

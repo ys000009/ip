@@ -6,10 +6,9 @@ public class ListCommand extends Command {
             System.out.println("Tasks:");
             for (int i = 0; i < this.taskList.size(); i++) {
                 System.out.println(String.format(
-                    "%d: %s",
-                    i + 1,
-                    this.taskList.get(i).toString()
-                ));
+                        "%d: %s",
+                        i + 1,
+                        this.taskList.get(i).toString()));
             }
             return true;
         }
