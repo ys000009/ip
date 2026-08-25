@@ -10,6 +10,7 @@ import bob.command.AddCommand;
 import bob.command.Command;
 import bob.command.DeleteCommand;
 import bob.command.ExitCommand;
+import bob.command.FindCommand;
 import bob.command.ListCommand;
 import bob.command.MarkCommand;
 import bob.exception.BobException;
@@ -110,6 +111,18 @@ public class ParserTest {
     public void parse_eventInvalidDateFormat_throwsBobException() {
         assertThrows(BobException.class, () -> Parser.parse("event meeting /from invalid /to 11/11/26 16:00"));
         assertThrows(BobException.class, () -> Parser.parse("event meeting /from 11/11/26 14:00 /to invalid"));
+    }
+
+    @Test
+    public void parse_findCommand_returnsFindCommand() throws BobException {
+        Command command = Parser.parse("find book");
+        assertInstanceOf(FindCommand.class, command);
+    }
+
+    @Test
+    public void parse_findEmptyKeyword_throwsBobException() {
+        assertThrows(BobException.class, () -> Parser.parse("find"));
+        assertThrows(BobException.class, () -> Parser.parse("find   "));
     }
 
     @Test

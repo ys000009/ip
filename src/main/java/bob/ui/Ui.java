@@ -1,5 +1,7 @@
 package bob.ui;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import bob.task.Task;
@@ -71,6 +73,20 @@ public class Ui {
         System.out.println("Tasks:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println(String.format("%d: %s", i + 1, tasks.get(i).toString()));
+        }
+    }
+
+    /**
+     * Displays the tasks that match a search keyword with their original list
+     * indices.
+     *
+     * @param matchingEntries the list of entries containing 1-based indices and
+     *                        matching tasks
+     */
+    public void showMatchingTasks(List<Map.Entry<Integer, Task>> matchingEntries) {
+        System.out.println("Here are the matching tasks in your list:");
+        for (Map.Entry<Integer, Task> entry : matchingEntries) {
+            System.out.println(String.format("%d.%s", entry.getKey(), entry.getValue().toString()));
         }
     }
 

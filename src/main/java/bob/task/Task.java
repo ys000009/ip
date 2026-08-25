@@ -21,13 +21,28 @@ public abstract class Task {
     }
 
     /**
-     * Returns the string representation of the task showing status icon and description.
+     * Returns the string representation of the task showing status icon and
+     * description.
      *
      * @return string representation of this task
      */
     @Override
     public String toString() {
         return "[" + (this.isDone ? "X" : " ") + "] " + this.name;
+    }
+
+    /**
+     * Checks if the task description contains the specified search keyword
+     * (case-insensitive).
+     *
+     * @param keyword the substring to search for
+     * @return true if the description contains the keyword, false otherwise
+     */
+    public boolean containsKeyword(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return false;
+        }
+        return this.name.toLowerCase().contains(keyword.toLowerCase());
     }
 
     /**

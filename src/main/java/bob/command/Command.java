@@ -13,7 +13,7 @@ public abstract class Command {
     /**
      * Constructs a Command.
      */
-    public Command() {
+    protected Command() {
     }
 
     /**
