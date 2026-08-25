@@ -1,10 +1,10 @@
-package commands;
+package bob.command;
 
-import exceptions.BobException;
-import storage.TaskStorage;
-import tasks.Task;
-import tasks.TaskList;
-import ui.Ui;
+import bob.exception.BobException;
+import bob.storage.TaskStorage;
+import bob.task.Task;
+import bob.task.TaskList;
+import bob.ui.Ui;
 
 /**
  * Command to mark or unmark a task in the task list.

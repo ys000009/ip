@@ -1,9 +1,11 @@
-import commands.Command;
-import exceptions.BobException;
-import parser.Parser;
-import storage.TaskStorage;
-import tasks.TaskList;
-import ui.Ui;
+package bob;
+
+import bob.command.Command;
+import bob.exception.BobException;
+import bob.parser.Parser;
+import bob.storage.TaskStorage;
+import bob.task.TaskList;
+import bob.ui.Ui;
 
 /**
  * Main entry point for the Bob task management application.
@@ -52,4 +54,3 @@ public class Bob {
         new Bob().run();
     }
 }
-

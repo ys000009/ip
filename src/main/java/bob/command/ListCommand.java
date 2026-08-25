@@ -1,9 +1,9 @@
-package commands;
+package bob.command;
 
-import exceptions.BobException;
-import storage.TaskStorage;
-import tasks.TaskList;
-import ui.Ui;
+import bob.exception.BobException;
+import bob.storage.TaskStorage;
+import bob.task.TaskList;
+import bob.ui.Ui;
 
 /**
  * Command to display all tasks in the task list.
@@ -15,4 +15,3 @@ public class ListCommand extends Command {
         ui.showTaskList(tasks);
     }
 }
-

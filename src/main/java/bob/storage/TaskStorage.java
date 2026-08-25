@@ -1,12 +1,4 @@
-package storage;
-
-import exceptions.BobException;
-import tasks.Deadline;
-import tasks.Event;
-import tasks.Task;
-import tasks.TaskList;
-import tasks.ToDo;
-import util.DatetimeHelper;
+package bob.storage;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,6 +7,14 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import bob.exception.BobException;
+import bob.task.Deadline;
+import bob.task.Event;
+import bob.task.Task;
+import bob.task.TaskList;
+import bob.task.ToDo;
+import bob.util.DatetimeHelper;
 
 /**
  * Provides persistent storage for a list of {@link Task} objects.
