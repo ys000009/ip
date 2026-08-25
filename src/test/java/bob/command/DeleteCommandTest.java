@@ -10,6 +10,9 @@ import bob.exception.BobException;
 import bob.task.TaskList;
 import bob.task.ToDo;
 
+/**
+ * Unit tests for {@link DeleteCommand}.
+ */
 public class DeleteCommandTest extends CommandTestBase {
 
     @Test

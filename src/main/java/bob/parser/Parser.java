@@ -21,6 +21,12 @@ import bob.util.DatetimeHelper;
 public class Parser {
 
     /**
+     * Prevents instantiation of this utility class.
+     */
+    private Parser() {
+    }
+
+    /**
      * Parses the full user command string into a specific Command.
      *
      * @param fullCommand the raw input entered by the user
@@ -66,6 +72,15 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses the arguments for a mark or unmark command.
+     *
+     * @param args   the argument string containing the 1-based task index
+     * @param isDone true to mark the task as done, false to unmark
+     * @return a {@link MarkCommand} configured with the parsed task index and
+     *         status
+     * @throws BobException if the arguments are empty or not a valid integer
+     */
     private static Command parseMarkCommand(String args, boolean isDone) throws BobException {
         if (args.isEmpty()) {
             throw new BobException("Error: Argument must be an integer");
@@ -78,6 +93,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses the arguments for a delete command.
+     *
+     * @param args the argument string containing the 1-based task index
+     * @return a {@link DeleteCommand} configured with the parsed task index
+     * @throws BobException if the arguments are empty or not a valid integer
+     */
     private static Command parseDeleteCommand(String args) throws BobException {
         if (args.isEmpty()) {
             throw new BobException("Error: Argument must be an integer");
@@ -90,6 +112,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses the arguments for creating a todo task.
+     *
+     * @param args the description of the todo task
+     * @return an {@link AddCommand} configured with a new {@link ToDo} task
+     * @throws BobException if the description is empty
+     */
     private static Command parseTodoCommand(String args) throws BobException {
         if (args.isEmpty()) {
             throw new BobException("todo needs a description");
@@ -97,6 +126,15 @@ public class Parser {
         return new AddCommand(new ToDo(args));
     }
 
+    /**
+     * Parses the arguments for creating a deadline task.
+     *
+     * @param args the argument string containing task description and {@code /by}
+     *             date-time
+     * @return an {@link AddCommand} configured with a new {@link Deadline} task
+     * @throws BobException if the description or date is missing, or date-time
+     *                      format is invalid
+     */
     private static Command parseDeadlineCommand(String args) throws BobException {
         if (args.isEmpty()) {
             throw new BobException("deadline needs a description");
@@ -121,6 +159,14 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses the arguments for creating an event task.
+     *
+     * @param args the argument string containing description, {@code /from}, and
+     *             {@code /to} date-times
+     * @return an {@link AddCommand} configured with a new {@link Event} task
+     * @throws BobException if any part is missing or date-time format is invalid
+     */
     private static Command parseEventCommand(String args) throws BobException {
         if (args.isEmpty()) {
             throw new BobException("event needs a description");

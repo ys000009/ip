@@ -21,6 +21,16 @@ public class AddCommand extends Command {
         this.task = task;
     }
 
+    /**
+     * Executes the add command by adding the task to the task list,
+     * saving the updated list to storage, and displaying a confirmation to the
+     * user.
+     *
+     * @param tasks   the list of tasks to add to
+     * @param ui      the user interface handler
+     * @param storage the storage handler to persist the task list
+     * @throws BobException if an error occurs while saving to storage
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, TaskStorage storage) throws BobException {
         tasks.add(this.task);

@@ -4,7 +4,10 @@ package bob.task;
  * Represents a general task in the task list.
  */
 public abstract class Task {
+    /** Description of the task. */
     protected String name;
+
+    /** Completion status of the task. */
     protected boolean isDone;
 
     /**
@@ -17,6 +20,12 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    /**
+     * Returns the string representation of the task showing status icon and
+     * description.
+     *
+     * @return string representation of this task
+     */
     @Override
     public String toString() {
         return "[" + (this.isDone ? "X" : " ") + "] " + this.name;

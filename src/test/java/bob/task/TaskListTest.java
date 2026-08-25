@@ -10,6 +10,9 @@ import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests for {@link TaskList}.
+ */
 public class TaskListTest {
 
     @Test

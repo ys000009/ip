@@ -14,6 +14,9 @@ import bob.command.ListCommand;
 import bob.command.MarkCommand;
 import bob.exception.BobException;
 
+/**
+ * Unit tests for {@link Parser}.
+ */
 public class ParserTest {
 
     @Test

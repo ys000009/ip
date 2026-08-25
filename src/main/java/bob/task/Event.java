@@ -25,6 +25,12 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Returns the string representation of the event task, including its status,
+     * description, and formatted start and end date/times.
+     *
+     * @return formatted string representation of this event task
+     */
     @Override
     public String toString() {
         return String.format(
@@ -34,6 +40,11 @@ public class Event extends Task {
                 this.to.format(DatetimeHelper.OUTPUT_FORMATTER));
     }
 
+    /**
+     * Formats the event task as a string suitable for persistent storage export.
+     *
+     * @return pipe-delimited string representation of this event task
+     */
     @Override
     public String export() {
         return String.format(

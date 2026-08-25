@@ -7,6 +7,12 @@ import java.time.format.DateTimeFormatter;
  */
 public class DatetimeHelper {
 
+    /**
+     * Prevents instantiation of this utility class.
+     */
+    private DatetimeHelper() {
+    }
+
     /** Formatter for parsing user input date-time strings (dd/MM/yy HH:mm). */
     public static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm");
 

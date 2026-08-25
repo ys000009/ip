@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests for {@link ToDo}.
+ */
 public class ToDoTest {
 
     @Test

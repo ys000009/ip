@@ -50,6 +50,11 @@ public class Bob {
         }
     }
 
+    /**
+     * Initializes and launches the Bob application.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         new Bob().run();
     }

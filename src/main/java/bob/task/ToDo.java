@@ -14,11 +14,22 @@ public class ToDo extends Task {
         super(name);
     }
 
+    /**
+     * Returns the string representation of the todo task, including its status
+     * and description.
+     *
+     * @return formatted string representation of this todo task
+     */
     @Override
     public String toString() {
         return "[T]" + super.toString();
     }
 
+    /**
+     * Formats the todo task as a string suitable for persistent storage export.
+     *
+     * @return pipe-delimited string representation of this todo task
+     */
     @Override
     public String export() {
         return String.format(

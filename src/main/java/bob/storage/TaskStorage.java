@@ -21,16 +21,17 @@ import bob.util.DatetimeHelper;
  * Provides persistent storage for a list of {@link Task} objects.
  * <p>
  * Tasks are stored in a text file using a type-specific format:
+ * </p>
  * 
  * <pre>
  * {@link ToDo}:      T | status | name
  * {@link Deadline}:  D | status | name | deadline
  * {@link Event}:     E | status | name | from | to
  * </pre>
- * </p>
+ * <p>
  * The storage file is located at {@code ./data/tasks.txt}.
- * If the file does
- * not exist when loading, an empty task list is returned.
+ * If the file does not exist when loading, an empty task list is returned.
+ * </p>
  */
 public class TaskStorage implements Storage<TaskList> {
 
@@ -55,6 +56,13 @@ public class TaskStorage implements Storage<TaskList> {
         this.path = path;
     }
 
+    /**
+     * Loads the tasks from the persistent storage file.
+     *
+     * @return a {@link TaskList} containing all parsed tasks, or an empty list if
+     *         file doesn't exist
+     * @throws BobException if an I/O error occurs or the file content is malformed
+     */
     @Override
     public TaskList load() throws BobException {
         ArrayList<Task> tasks = new ArrayList<>();
@@ -82,6 +90,12 @@ public class TaskStorage implements Storage<TaskList> {
         return new TaskList(tasks);
     }
 
+    /**
+     * Saves the given task list to the storage file.
+     *
+     * @param tasks the list of tasks to save
+     * @throws BobException if an I/O error occurs during saving
+     */
     @Override
     public void save(TaskList tasks) throws BobException {
         try {
@@ -103,6 +117,14 @@ public class TaskStorage implements Storage<TaskList> {
         }
     }
 
+    /**
+     * Parses a single line from the storage file into a {@link Task} object.
+     *
+     * @param line the formatted string representation of a task
+     * @return the parsed {@link Task}
+     * @throws BobException if the line format is invalid or contains unparseable
+     *                      dates
+     */
     private Task parseTask(String line) throws BobException {
         String[] parts = line.split(" \\| ");
 

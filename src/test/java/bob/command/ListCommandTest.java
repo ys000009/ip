@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import bob.task.ToDo;
 
+/**
+ * Unit tests for {@link ListCommand}.
+ */
 public class ListCommandTest extends CommandTestBase {
 
     @Test
