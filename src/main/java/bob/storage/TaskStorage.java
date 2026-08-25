@@ -31,7 +31,7 @@ import bob.util.DatetimeHelper;
  * If the file does
  * not exist when loading, an empty task list is returned.
  */
-public class TaskStorage implements IStorage<TaskList> {
+public class TaskStorage implements Storage<TaskList> {
 
     private static final Path FILE_PATH = Paths.get("data", "tasks.txt");
 

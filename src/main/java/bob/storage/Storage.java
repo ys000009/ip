@@ -7,7 +7,7 @@ import bob.exception.BobException;
  *
  * @param <T> the type of data being loaded and saved
  */
-public interface IStorage<T> {
+public interface Storage<T> {
 
     /**
      * Loads the stored data.
