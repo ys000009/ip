@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests for {@link Event}.
+ */
 public class EventTest {
 
     @Test

@@ -21,6 +21,16 @@ public class DeleteCommand extends Command {
         this.taskId = taskId;
     }
 
+    /**
+     * Executes the delete command by removing the task at the specified 1-based
+     * index,
+     * saving the updated list to storage, and notifying the user.
+     *
+     * @param tasks   the list of tasks to remove from
+     * @param ui      the user interface handler
+     * @param storage the storage handler to persist the task list
+     * @throws BobException if the taskId is out of bounds or saving fails
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, TaskStorage storage) throws BobException {
         try {

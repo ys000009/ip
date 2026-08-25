@@ -11,6 +11,12 @@ import bob.ui.Ui;
 public abstract class Command {
 
     /**
+     * Constructs a Command.
+     */
+    public Command() {
+    }
+
+    /**
      * Executes the command with the given task list, user interface, and storage.
      *
      * @param tasks   the list of tasks

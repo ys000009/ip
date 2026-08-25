@@ -9,6 +9,9 @@ import bob.exception.BobException;
 import bob.task.TaskList;
 import bob.task.ToDo;
 
+/**
+ * Unit tests for {@link AddCommand}.
+ */
 public class AddCommandTest extends CommandTestBase {
 
     @Test

@@ -74,6 +74,11 @@ public class TaskList implements Iterable<Task> {
         return this.tasks.isEmpty();
     }
 
+    /**
+     * Returns an iterator over the tasks in this list.
+     *
+     * @return an iterator over the tasks
+     */
     @Override
     public Iterator<Task> iterator() {
         return this.tasks.iterator();

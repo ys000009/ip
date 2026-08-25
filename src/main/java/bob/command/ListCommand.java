@@ -10,6 +10,20 @@ import bob.ui.Ui;
  */
 public class ListCommand extends Command {
 
+    /**
+     * Constructs a ListCommand.
+     */
+    public ListCommand() {
+    }
+
+    /**
+     * Executes the list command by displaying all current tasks to the user.
+     *
+     * @param tasks   the list of tasks to display
+     * @param ui      the user interface handler
+     * @param storage the storage handler
+     * @throws BobException if an error occurs during execution
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, TaskStorage storage) throws BobException {
         ui.showTaskList(tasks);

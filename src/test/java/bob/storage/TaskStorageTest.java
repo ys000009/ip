@@ -19,6 +19,9 @@ import bob.task.Event;
 import bob.task.TaskList;
 import bob.task.ToDo;
 
+/**
+ * Unit tests for {@link TaskStorage}.
+ */
 public class TaskStorageTest {
 
     @TempDir
