@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -24,14 +25,14 @@ public class TaskListTest {
 
     @Test
     public void parameterizedConstructor_initializesWithTasks() {
-        ArrayList<Task> list = new ArrayList<>();
+        List<Task> list = new ArrayList<>();
         list.add(new ToDo("task 1"));
         list.add(new ToDo("task 2"));
 
         TaskList tasks = new TaskList(list);
         assertEquals(2, tasks.size());
         assertFalse(tasks.isEmpty());
-        assertEquals("task 1", tasks.get(0).name);
+        assertEquals("[T][ ] task 1", tasks.get(0).toString());
     }
 
     @Test
@@ -79,9 +80,9 @@ public class TaskListTest {
 
         Iterator<Task> it = tasks.iterator();
         assertTrue(it.hasNext());
-        assertEquals("item 1", it.next().name);
+        assertEquals("[T][ ] item 1", it.next().toString());
         assertTrue(it.hasNext());
-        assertEquals("item 2", it.next().name);
+        assertEquals("[T][ ] item 2", it.next().toString());
         assertFalse(it.hasNext());
     }
 }

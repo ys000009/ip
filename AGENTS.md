@@ -30,15 +30,23 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 
 ## Git
 
+* Strictly follow the **SE-EDU Git Conventions** as defined in [SE-EDU Git Conventions](https://se-education.org/guides/conventions/git.html) and the project skill `seedu-git-standard`.
 * Use lightweight tags unless the user requests an annotated tag.
-* Follow the [se-education Git commit conventions](https://se-education.org/guides/conventions/git.html):
-  * **Subject line**: Imperative mood (e.g., `Add ...`, `Refactor ...`, `Extract ...`), concise summary (50 characters or less), no trailing period.
-  * **Body**: Separate from subject with a blank line. Explain the context/problem, use the "Let's" syntax to outline changes, and provide rationale for the change.
+* Commit conventions:
+  * **Subject line**: Imperative mood (e.g., `Add ...`, `Refactor ...`, `Extract ...`), concise summary (50 characters or less, hard limit 72), capitalize first letter, no trailing period.
+  * **Body**: Separate from subject with a blank line for non-trivial commits. Explain the context/problem, use the "Let's" syntax to outline changes, and provide rationale for the change.
 * Do not commit or push unless explicitly asked.
+
+## Coding standard:
+
+* Strictly follow the **SE-EDU Java Coding Standard (Basic + Intermediate rules)** as defined in [SE-EDU Java Conventions](https://se-education.org/guides/conventions/java/intermediate.html) and the project skill `seedu-java-coding-standard`.
+* For any topics not covered by the SE-EDU standard, follow the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
+* Adhere to all naming (PascalCase classes, camelCase methods/variables, SCREAMING_SNAKE_CASE constants), layout (4 spaces indent, 8 spaces wrapped indent, 120 char max line length, mandatory braces for all control blocks), statements (no wildcard imports, interface types where applicable), and documentation standards (descriptive Javadoc for public/protected members with third-person declarative summaries).
 
 ## Testing and test coverage:
 
 * **Target**: Focus JUnit tests on the top ~50% highest-value methods (prioritizing complex, core, or critical business logic, such as input parsing, persistent storage, command execution, and data models).
 * **Maintenance**: JUnit tests must be updated or added after each code change to continuously comply with this 50% coverage target.
 * Ensure all tests pass (`./gradlew test`) before considering a coding task complete.
+
 

@@ -65,7 +65,7 @@ public class TaskStorage implements Storage<TaskList> {
      */
     @Override
     public TaskList load() throws BobException {
-        ArrayList<Task> tasks = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
 
         // No file on first startup -> return empty task list.
         if (!Files.exists(path)) {
@@ -104,7 +104,7 @@ public class TaskStorage implements Storage<TaskList> {
                 Files.createDirectories(path.getParent());
             }
 
-            ArrayList<String> lines = new ArrayList<>();
+            List<String> lines = new ArrayList<>();
 
             for (Task task : tasks) {
                 lines.add(task.export());

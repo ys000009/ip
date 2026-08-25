@@ -8,12 +8,12 @@ import bob.util.DatetimeHelper;
  * Represents a task with a deadline.
  */
 public class Deadline extends Task {
-    private LocalDateTime deadline;
+    private final LocalDateTime deadline;
 
     /**
      * Constructs a Deadline task with the specified description and due date/time.
      *
-     * @param name     the description of the deadline task
+     * @param name the description of the deadline task
      * @param deadline the due date/time
      */
     public Deadline(String name, LocalDateTime deadline) {
