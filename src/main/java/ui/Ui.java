@@ -2,6 +2,9 @@ package ui;
 
 import java.util.Scanner;
 
+import tasks.Task;
+import tasks.TaskList;
+
 /**
  * Handles interactions with the user, such as reading input and displaying
  * messages.
@@ -28,6 +31,13 @@ public class Ui {
     }
 
     /**
+     * Displays the goodbye message to the user.
+     */
+    public void showGoodbye() {
+        System.out.println("Goodbye.");
+    }
+
+    /**
      * Prints a horizontal divider line.
      */
     public void showDividerLine() {
@@ -50,6 +60,66 @@ public class Ui {
      */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
+    }
+
+    /**
+     * Displays the full list of tasks.
+     *
+     * @param tasks the task list to display
+     */
+    public void showTaskList(TaskList tasks) {
+        System.out.println("Tasks:");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(String.format(
+                    "%d: %s",
+                    i + 1,
+                    tasks.get(i).toString()));
+        }
+    }
+
+    /**
+     * Displays the message after adding a task.
+     *
+     * @param task the added task
+     * @param totalCount the total number of tasks after addition
+     */
+    public void showTaskAdded(Task task, int totalCount) {
+        System.out.println("Task added:");
+        System.out.println(task.toString());
+        System.out.println(String.format(
+                "%d %s in list",
+                totalCount,
+                totalCount < 2 ? "item" : "items"));
+    }
+
+    /**
+     * Displays the message after deleting a task.
+     *
+     * @param task the deleted task
+     * @param totalCount the total number of tasks after deletion
+     */
+    public void showTaskDeleted(Task task, int totalCount) {
+        System.out.println("Removed: ");
+        System.out.println(task.toString());
+        System.out.println(String.format(
+                "%d %s in list",
+                totalCount,
+                totalCount < 2 ? "item" : "items"));
+    }
+
+    /**
+     * Displays the message after marking or unmarking a task.
+     *
+     * @param task the task that was marked or unmarked
+     * @param isDone true if marked as done, false if marked as not done
+     */
+    public void showTaskMarked(Task task, boolean isDone) {
+        if (isDone) {
+            System.out.println("Marked as done:");
+        } else {
+            System.out.println("Marked as not done:");
+        }
+        System.out.println(" " + task.toString());
     }
 
     /**

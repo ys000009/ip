@@ -1,16 +1,32 @@
 package commands;
 
 import exceptions.BobException;
-import exceptions.ExitException;
+import storage.TaskStorage;
 import tasks.TaskList;
+import ui.Ui;
 
+/**
+ * Represents an executable command in the application.
+ */
 public abstract class Command {
-    protected TaskList taskList;
 
-    public Command setTaskList(TaskList taskList) {
-        this.taskList = taskList;
-        return this;
+    /**
+     * Executes the command with the given task list, user interface, and storage.
+     *
+     * @param tasks the list of tasks
+     * @param ui the user interface handler
+     * @param storage the storage handler
+     * @throws BobException if an error occurs during execution
+     */
+    public abstract void execute(TaskList tasks, Ui ui, TaskStorage storage) throws BobException;
+
+    /**
+     * Indicates whether this command causes the application to exit.
+     *
+     * @return true if the command causes an exit, false otherwise
+     */
+    public boolean isExit() {
+        return false;
     }
-
-    public abstract boolean processInput(String input) throws BobException, ExitException;
 }
+

@@ -1,32 +1,34 @@
 package commands;
 
 import exceptions.BobException;
+import storage.TaskStorage;
 import tasks.Task;
+import tasks.TaskList;
+import ui.Ui;
 
+/**
+ * Command to delete a task from the task list.
+ */
 public class DeleteCommand extends Command {
-    public boolean processInput(String input) throws BobException {
-        String[] parts = input.split(" ", 2);
-        if (parts[0].equals("delete")) {
-            int taskId;
-            try {
-                taskId = Integer.parseInt(parts[1]);
-                Task task = this.taskList.remove(taskId - 1);
-                System.out.println("Removed: ");
-                System.out.println(task.toString());
-                System.out.println(String.format(
-                        "%d %s in list",
-                        this.taskList.size(),
-                        this.taskList.size() < 2 ? "item" : "items"));
-            } catch (NumberFormatException e) {
-                throw new BobException("Error: Argument must be an integer");
-            } catch (IndexOutOfBoundsException e) {
-                throw new BobException(
-                        """
-                                Error: taskId out of bounds
-                                """);
-            }
-            return true;
+    private final int taskId;
+
+    /**
+     * Constructs a DeleteCommand with the specified 1-based task ID.
+     *
+     * @param taskId the 1-based index of the task to delete
+     */
+    public DeleteCommand(int taskId) {
+        this.taskId = taskId;
+    }
+
+    @Override
+    public void execute(TaskList tasks, Ui ui, TaskStorage storage) throws BobException {
+        try {
+            Task task = tasks.remove(taskId - 1);
+            storage.save(tasks);
+            ui.showTaskDeleted(task, tasks.size());
+        } catch (IndexOutOfBoundsException e) {
+            throw new BobException("Error: taskId out of bounds");
         }
-        return false;
     }
 }

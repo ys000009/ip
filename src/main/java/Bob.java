@@ -1,65 +1,55 @@
-import commands.AddCommand;
 import commands.Command;
-import commands.DeleteCommand;
-import commands.ExitCommand;
-import commands.ListCommand;
-import commands.MarkCommand;
 import exceptions.BobException;
-import exceptions.ExitException;
+import parser.Parser;
 import storage.TaskStorage;
 import tasks.TaskList;
 import ui.Ui;
 
+/**
+ * Main entry point for the Bob task management application.
+ */
 public class Bob {
-    private static TaskStorage storage = new TaskStorage();
-    private static Ui ui = new Ui();
-    private static Command[] commands = {
-            new MarkCommand(),
-            new ExitCommand(),
-            new ListCommand(),
-            new AddCommand(),
-            new DeleteCommand()
-    };
+    private final TaskStorage storage;
+    private TaskList tasks;
+    private final Ui ui;
 
-    public static void main(String[] args) {
-        ui.showWelcome();
-
-        TaskList tasks;
+    /**
+     * Constructs a new Bob application instance.
+     */
+    public Bob() {
+        this.ui = new Ui();
+        this.storage = new TaskStorage();
         try {
-            tasks = storage.load();
+            this.tasks = this.storage.load();
         } catch (BobException e) {
-            ui.showError(e.getMessage());
-            return;
+            this.ui.showError(e.getMessage());
+            this.tasks = new TaskList();
         }
+    }
 
-        for (Command c : commands) {
-            c.setTaskList(tasks);
-        }
+    /**
+     * Runs the main command loop of the application.
+     */
+    public void run() {
+        ui.showWelcome();
+        boolean isExit = false;
 
-        while (ui.hasNextCommand()) {
-            String nextLine = ui.readCommand();
+        while (!isExit && ui.hasNextCommand()) {
+            String fullCommand = ui.readCommand();
             ui.showDividerLine();
-            boolean processed = false;
             try {
-                for (Command c : commands) {
-                    processed = processed || c.processInput(nextLine);
-                }
-
-                // save tasks after every command
-                storage.save(tasks);
-
-                if (!processed) {
-                    ui.showMessage("What's that?");
-                }
-
-            } catch (ExitException e) {
-                ui.showMessage(e.getMessage());
-                break;
+                Command c = Parser.parse(fullCommand);
+                c.execute(tasks, ui, storage);
+                isExit = c.isExit();
             } catch (BobException e) {
                 ui.showError(e.getMessage());
             }
-
             ui.showDividerLine();
         }
     }
+
+    public static void main(String[] args) {
+        new Bob().run();
+    }
 }
+

@@ -1,39 +1,43 @@
 package commands;
 
 import exceptions.BobException;
+import storage.TaskStorage;
+import tasks.Task;
+import tasks.TaskList;
+import ui.Ui;
 
+/**
+ * Command to mark or unmark a task in the task list.
+ */
 public class MarkCommand extends Command {
-    public boolean processInput(String input) throws BobException {
-        String[] parts = input.split(" ", 2);
-        String command = parts[0];
-        int taskId;
-        switch (command) {
-            case "mark":
-                try {
-                    taskId = Integer.parseInt(parts[1]);
-                    this.taskList.get(taskId - 1).mark();
-                } catch (NumberFormatException e) {
-                    throw new BobException("Error: Argument must be an integer");
-                } catch (IndexOutOfBoundsException e) {
-                    throw new BobException("Error: taskId out of bounds");
-                }
-                System.out.println("Marked as done:");
-                System.out.println(" " + this.taskList.get(taskId - 1).toString());
-                return true;
+    private final int taskId;
+    private final boolean isDone;
 
-            case "unmark":
-                try {
-                    taskId = Integer.parseInt(parts[1]);
-                    this.taskList.get(taskId - 1).unmark();
-                } catch (NumberFormatException e) {
-                    throw new BobException("Error: Argument must be an integer");
-                } catch (IndexOutOfBoundsException e) {
-                    throw new BobException("Error: taskId out of bounds");
-                }
-                System.out.println("Marked as not done:");
-                System.out.println(" " + this.taskList.get(taskId - 1).toString());
-                return true;
+    /**
+     * Constructs a MarkCommand with the specified 1-based task ID and target
+     * completion state.
+     *
+     * @param taskId the 1-based index of the task to mark/unmark
+     * @param isDone true to mark the task as done, false to mark as not done
+     */
+    public MarkCommand(int taskId, boolean isDone) {
+        this.taskId = taskId;
+        this.isDone = isDone;
+    }
+
+    @Override
+    public void execute(TaskList tasks, Ui ui, TaskStorage storage) throws BobException {
+        try {
+            Task task = tasks.get(taskId - 1);
+            if (isDone) {
+                task.mark();
+            } else {
+                task.unmark();
+            }
+            storage.save(tasks);
+            ui.showTaskMarked(task, isDone);
+        } catch (IndexOutOfBoundsException e) {
+            throw new BobException("Error: taskId out of bounds");
         }
-        return false;
     }
 }
