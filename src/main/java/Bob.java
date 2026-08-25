@@ -1,75 +1,55 @@
-import java.util.Scanner;
-import java.util.ArrayList;
-
-import commands.AddCommand;
 import commands.Command;
-import commands.DeleteCommand;
-import commands.ExitCommand;
-import commands.ListCommand;
-import commands.MarkCommand;
 import exceptions.BobException;
-import exceptions.ExitException;
+import parser.Parser;
 import storage.TaskStorage;
-import tasks.Task;
+import tasks.TaskList;
+import ui.Ui;
 
+/**
+ * Main entry point for the Bob task management application.
+ */
 public class Bob {
-    private static TaskStorage storage = new TaskStorage();
-    private static String horiLines = "_".repeat(30);
-    private static Command[] commands = {
-        new MarkCommand(),
-        new ExitCommand(),
-        new ListCommand(),
-        new AddCommand(),
-        new DeleteCommand()
-    };
+    private final TaskStorage storage;
+    private TaskList tasks;
+    private final Ui ui;
+
+    /**
+     * Constructs a new Bob application instance.
+     */
+    public Bob() {
+        this.ui = new Ui();
+        this.storage = new TaskStorage();
+        try {
+            this.tasks = this.storage.load();
+        } catch (BobException e) {
+            this.ui.showError(e.getMessage());
+            this.tasks = new TaskList();
+        }
+    }
+
+    /**
+     * Runs the main command loop of the application.
+     */
+    public void run() {
+        ui.showWelcome();
+        boolean isExit = false;
+
+        while (!isExit && ui.hasNextCommand()) {
+            String fullCommand = ui.readCommand();
+            ui.showDividerLine();
+            try {
+                Command c = Parser.parse(fullCommand);
+                c.execute(tasks, ui, storage);
+                isExit = c.isExit();
+            } catch (BobException e) {
+                ui.showError(e.getMessage());
+            }
+            ui.showDividerLine();
+        }
+    }
 
     public static void main(String[] args) {
-        System.out.println(horiLines);
-        System.out.println("Hello! I'm Bob.");
-        System.out.println("What can I do for you?");
-        System.out.println(horiLines);
-
-        Scanner sc = new Scanner(System.in);
-
-        ArrayList<Task> tasks;
-        try {
-            tasks = storage.load();
-        } catch (BobException e) {
-            System.out.println(e.getMessage());
-            return;
-        }
-
-        for (Command c: commands) {
-            c.setTaskList(tasks);
-        }
-        
-        while (sc.hasNextLine()) {
-            String nextLine = sc.nextLine();
-            System.out.println(horiLines);
-            boolean processed = false;
-            try 
-            {
-                for (Command c : commands) {
-                    processed = processed || c.processInput(nextLine);
-                }
-                
-                // save tasks after every command
-                storage.save(tasks);
-
-                if (!processed) {
-                    System.out.println("What's that?");
-                }
-            
-            } catch (ExitException e) {
-                System.out.println(e.getMessage());
-                break;
-            } catch (BobException e) {
-                System.out.println(e.getMessage());
-            }
-            
-
-            System.out.println(horiLines);
-        }
+        new Bob().run();
     }
 }
 
