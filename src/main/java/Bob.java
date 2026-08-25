@@ -1,4 +1,3 @@
-import java.util.Scanner;
 import java.util.ArrayList;
 
 import commands.AddCommand;
@@ -11,65 +10,58 @@ import exceptions.BobException;
 import exceptions.ExitException;
 import storage.TaskStorage;
 import tasks.Task;
+import ui.Ui;
 
 public class Bob {
     private static TaskStorage storage = new TaskStorage();
-    private static String horiLines = "_".repeat(30);
+    private static Ui ui = new Ui();
     private static Command[] commands = {
-        new MarkCommand(),
-        new ExitCommand(),
-        new ListCommand(),
-        new AddCommand(),
-        new DeleteCommand()
+            new MarkCommand(),
+            new ExitCommand(),
+            new ListCommand(),
+            new AddCommand(),
+            new DeleteCommand()
     };
 
     public static void main(String[] args) {
-        System.out.println(horiLines);
-        System.out.println("Hello! I'm Bob.");
-        System.out.println("What can I do for you?");
-        System.out.println(horiLines);
-
-        Scanner sc = new Scanner(System.in);
+        ui.showWelcome();
 
         ArrayList<Task> tasks;
         try {
             tasks = storage.load();
         } catch (BobException e) {
-            System.out.println(e.getMessage());
+            ui.showError(e.getMessage());
             return;
         }
 
-        for (Command c: commands) {
+        for (Command c : commands) {
             c.setTaskList(tasks);
         }
-        
-        while (sc.hasNextLine()) {
-            String nextLine = sc.nextLine();
-            System.out.println(horiLines);
+
+        while (ui.hasNextCommand()) {
+            String nextLine = ui.readCommand();
+            ui.showDividerLine();
             boolean processed = false;
-            try 
-            {
+            try {
                 for (Command c : commands) {
                     processed = processed || c.processInput(nextLine);
                 }
-                
+
                 // save tasks after every command
                 storage.save(tasks);
 
                 if (!processed) {
-                    System.out.println("What's that?");
+                    ui.showMessage("What's that?");
                 }
-            
+
             } catch (ExitException e) {
-                System.out.println(e.getMessage());
+                ui.showMessage(e.getMessage());
                 break;
             } catch (BobException e) {
-                System.out.println(e.getMessage());
+                ui.showError(e.getMessage());
             }
-            
 
-            System.out.println(horiLines);
+            ui.showDividerLine();
         }
     }
 }
-
