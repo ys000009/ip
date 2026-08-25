@@ -50,6 +50,11 @@ public class Bob {
         }
     }
 
+    /**
+     * Starts the Bob task manager application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         new Bob().run();
     }

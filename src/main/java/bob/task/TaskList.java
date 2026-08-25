@@ -2,12 +2,13 @@ package bob.task;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Represents a list of tasks and provides operations to manipulate the tasks.
  */
 public class TaskList implements Iterable<Task> {
-    private final ArrayList<Task> tasks;
+    private final List<Task> tasks;
 
     /**
      * Constructs an empty TaskList.
@@ -21,8 +22,26 @@ public class TaskList implements Iterable<Task> {
      *
      * @param tasks the initial list of tasks
      */
-    public TaskList(ArrayList<Task> tasks) {
-        this.tasks = tasks != null ? tasks : new ArrayList<>();
+    public TaskList(List<Task> tasks) {
+        this.tasks = tasks != null ? new ArrayList<>(tasks) : new ArrayList<>();
+    }
+
+    /**
+     * Finds and returns a new {@link TaskList} containing all tasks whose
+     * description
+     * contains the given keyword.
+     *
+     * @param keyword the search term to filter tasks by
+     * @return a {@link TaskList} of matching tasks
+     */
+    public TaskList find(String keyword) {
+        List<Task> matchingTasks = new ArrayList<>();
+        for (Task task : this.tasks) {
+            if (task.containsKeyword(keyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        return new TaskList(matchingTasks);
     }
 
     /**

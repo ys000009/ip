@@ -10,6 +10,12 @@ import bob.ui.Ui;
  */
 public class ListCommand extends Command {
 
+    /**
+     * Constructs a ListCommand.
+     */
+    public ListCommand() {
+    }
+
     @Override
     public void execute(TaskList tasks, Ui ui, TaskStorage storage) throws BobException {
         ui.showTaskList(tasks);

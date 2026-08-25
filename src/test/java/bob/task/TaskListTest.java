@@ -76,9 +76,32 @@ public class TaskListTest {
 
         Iterator<Task> it = tasks.iterator();
         assertTrue(it.hasNext());
-        assertEquals("item 1", it.next().name);
+        assertEquals("[T][ ] item 1", it.next().toString());
         assertTrue(it.hasNext());
-        assertEquals("item 2", it.next().name);
+        assertEquals("[T][ ] item 2", it.next().toString());
         assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void find_matchingAndNonMatchingKeyword_returnsFilteredTaskList() {
+        TaskList tasks = new TaskList();
+        tasks.add(new ToDo("read book"));
+        tasks.add(new ToDo("return book"));
+        tasks.add(new ToDo("buy groceries"));
+
+        TaskList matching = tasks.find("book");
+        assertEquals(2, matching.size());
+        assertEquals("[T][ ] read book", matching.get(0).toString());
+        assertEquals("[T][ ] return book", matching.get(1).toString());
+
+        TaskList caseInsensitive = tasks.find("BOOK");
+        assertEquals(2, caseInsensitive.size());
+
+        TaskList none = tasks.find("swimming");
+        assertEquals(0, none.size());
+        assertTrue(none.isEmpty());
+
+        TaskList emptyKeyword = tasks.find("");
+        assertEquals(0, emptyKeyword.size());
     }
 }

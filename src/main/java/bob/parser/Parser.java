@@ -7,6 +7,7 @@ import bob.command.AddCommand;
 import bob.command.Command;
 import bob.command.DeleteCommand;
 import bob.command.ExitCommand;
+import bob.command.FindCommand;
 import bob.command.ListCommand;
 import bob.command.MarkCommand;
 import bob.exception.BobException;
@@ -19,6 +20,9 @@ import bob.util.DatetimeHelper;
  * Parses user input into executable Command objects.
  */
 public class Parser {
+
+    private Parser() {
+    }
 
     /**
      * Parses the full user command string into a specific Command.
@@ -42,6 +46,9 @@ public class Parser {
 
             case "list":
                 return new ListCommand();
+
+            case "find":
+                return parseFindCommand(arguments);
 
             case "mark":
                 return parseMarkCommand(arguments, true);
@@ -152,5 +159,19 @@ public class Parser {
                     Date Format: dd/MM/yy HH:mm
                     """);
         }
+    }
+
+    /**
+     * Parses the arguments for creating a find command.
+     *
+     * @param args the search keyword entered by the user
+     * @return a {@link FindCommand} configured with the search keyword
+     * @throws BobException if the search keyword is empty
+     */
+    private static Command parseFindCommand(String args) throws BobException {
+        if (args.isEmpty()) {
+            throw new BobException("find needs a keyword");
+        }
+        return new FindCommand(args);
     }
 }

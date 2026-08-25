@@ -7,6 +7,9 @@ import java.time.format.DateTimeFormatter;
  */
 public class DatetimeHelper {
 
+    private DatetimeHelper() {
+    }
+
     /** Formatter for parsing user input date-time strings (dd/MM/yy HH:mm). */
     public static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm");
 

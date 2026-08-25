@@ -27,9 +27,8 @@ import bob.util.DatetimeHelper;
  * {@link Deadline}:  D | status | name | deadline
  * {@link Event}:     E | status | name | from | to
  * </pre>
- * </p>
- * The storage file is located at {@code ./data/tasks.txt}.
- * If the file does
+ * 
+ * The storage file is located at {@code ./data/tasks.txt}. If the file does
  * not exist when loading, an empty task list is returned.
  */
 public class TaskStorage implements Storage<TaskList> {

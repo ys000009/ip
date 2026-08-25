@@ -70,10 +70,19 @@ public class Ui {
     public void showTaskList(TaskList tasks) {
         System.out.println("Tasks:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println(String.format(
-                    "%d: %s",
-                    i + 1,
-                    tasks.get(i).toString()));
+            System.out.println(String.format("%d: %s", i + 1, tasks.get(i).toString()));
+        }
+    }
+
+    /**
+     * Displays the tasks that match a search keyword.
+     *
+     * @param tasks the list of matching tasks to display
+     */
+    public void showMatchingTasks(TaskList tasks) {
+        System.out.println("Here are the matching tasks in your list:");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(String.format("%d.%s", i + 1, tasks.get(i).toString()));
         }
     }
 

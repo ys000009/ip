@@ -4,7 +4,10 @@ package bob.task;
  * Represents a general task in the task list.
  */
 public abstract class Task {
+    /** The description of the task. */
     protected String name;
+
+    /** The completion status of the task. */
     protected boolean isDone;
 
     /**
@@ -20,6 +23,19 @@ public abstract class Task {
     @Override
     public String toString() {
         return "[" + (this.isDone ? "X" : " ") + "] " + this.name;
+    }
+
+    /**
+     * Checks if the task description contains the specified search keyword (case-insensitive).
+     *
+     * @param keyword the substring to search for
+     * @return true if the description contains the keyword, false otherwise
+     */
+    public boolean containsKeyword(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return false;
+        }
+        return this.name.toLowerCase().contains(keyword.toLowerCase());
     }
 
     /**

@@ -10,6 +10,12 @@ import bob.ui.Ui;
  */
 public class ExitCommand extends Command {
 
+    /**
+     * Constructs an ExitCommand.
+     */
+    public ExitCommand() {
+    }
+
     @Override
     public void execute(TaskList tasks, Ui ui, TaskStorage storage) throws BobException {
         ui.showGoodbye();
