@@ -1,15 +1,13 @@
 package commands;
 
-import java.util.ArrayList;
-
 import exceptions.BobException;
 import exceptions.ExitException;
-import tasks.Task;
+import tasks.TaskList;
 
 public abstract class Command {
-    protected ArrayList<Task> taskList;
+    protected TaskList taskList;
 
-    public Command setTaskList(ArrayList<Task> taskList) {
+    public Command setTaskList(TaskList taskList) {
         this.taskList = taskList;
         return this;
     }

@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 import commands.AddCommand;
 import commands.Command;
 import commands.DeleteCommand;
@@ -9,7 +7,7 @@ import commands.MarkCommand;
 import exceptions.BobException;
 import exceptions.ExitException;
 import storage.TaskStorage;
-import tasks.Task;
+import tasks.TaskList;
 import ui.Ui;
 
 public class Bob {
@@ -26,7 +24,7 @@ public class Bob {
     public static void main(String[] args) {
         ui.showWelcome();
 
-        ArrayList<Task> tasks;
+        TaskList tasks;
         try {
             tasks = storage.load();
         } catch (BobException e) {

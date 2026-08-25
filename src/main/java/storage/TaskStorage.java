@@ -4,6 +4,7 @@ import exceptions.BobException;
 import tasks.Deadline;
 import tasks.Event;
 import tasks.Task;
+import tasks.TaskList;
 import tasks.ToDo;
 import util.DatetimeHelper;
 
@@ -30,7 +31,7 @@ import java.util.List;
  * If the file does
  * not exist when loading, an empty task list is returned.
  */
-public class TaskStorage implements IStorage<ArrayList<Task>> {
+public class TaskStorage implements IStorage<TaskList> {
 
     private static final Path FILE_PATH = Paths.get("data", "tasks.txt");
 
@@ -41,12 +42,12 @@ public class TaskStorage implements IStorage<ArrayList<Task>> {
     }
 
     @Override
-    public ArrayList<Task> load() throws BobException {
+    public TaskList load() throws BobException {
         ArrayList<Task> tasks = new ArrayList<>();
 
         // No file on first startup -> return empty task list.
         if (!Files.exists(path)) {
-            return tasks;
+            return new TaskList(tasks);
         }
 
         try {
@@ -64,11 +65,11 @@ public class TaskStorage implements IStorage<ArrayList<Task>> {
             throw new BobException("I/O Error: Unable to load tasks from storage");
         }
 
-        return tasks;
+        return new TaskList(tasks);
     }
 
     @Override
-    public void save(ArrayList<Task> tasks) throws BobException {
+    public void save(TaskList tasks) throws BobException {
         try {
             // Create ./data/ if it does not exist.
             if (path.getParent() != null) {
