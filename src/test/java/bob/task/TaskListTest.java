@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -85,23 +87,28 @@ public class TaskListTest {
     @Test
     public void find_matchingAndNonMatchingKeyword_returnsFilteredTaskList() {
         TaskList tasks = new TaskList();
-        tasks.add(new ToDo("read book"));
-        tasks.add(new ToDo("return book"));
-        tasks.add(new ToDo("buy groceries"));
+        tasks.add(new ToDo("read book")); // index 1
+        tasks.add(new ToDo("return book")); // index 2
+        tasks.add(new ToDo("buy groceries")); // index 3
+        tasks.add(new ToDo("read another book")); // index 4
 
-        TaskList matching = tasks.find("book");
-        assertEquals(2, matching.size());
-        assertEquals("[T][ ] read book", matching.get(0).toString());
-        assertEquals("[T][ ] return book", matching.get(1).toString());
+        List<Map.Entry<Integer, Task>> matching = tasks.find("book");
+        assertEquals(3, matching.size());
+        assertEquals(1, matching.get(0).getKey());
+        assertEquals("[T][ ] read book", matching.get(0).getValue().toString());
+        assertEquals(2, matching.get(1).getKey());
+        assertEquals("[T][ ] return book", matching.get(1).getValue().toString());
+        assertEquals(4, matching.get(2).getKey());
+        assertEquals("[T][ ] read another book", matching.get(2).getValue().toString());
 
-        TaskList caseInsensitive = tasks.find("BOOK");
-        assertEquals(2, caseInsensitive.size());
+        List<Map.Entry<Integer, Task>> caseInsensitive = tasks.find("BOOK");
+        assertEquals(3, caseInsensitive.size());
 
-        TaskList none = tasks.find("swimming");
+        List<Map.Entry<Integer, Task>> none = tasks.find("swimming");
         assertEquals(0, none.size());
         assertTrue(none.isEmpty());
 
-        TaskList emptyKeyword = tasks.find("");
+        List<Map.Entry<Integer, Task>> emptyKeyword = tasks.find("");
         assertEquals(0, emptyKeyword.size());
     }
 }

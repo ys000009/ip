@@ -17,10 +17,11 @@ import bob.task.ToDo;
 public class FindCommandTest extends CommandTestBase {
 
     @Test
-    public void execute_matchingKeyword_displaysMatchingTasks() throws BobException {
-        tasks.add(new ToDo("read book"));
-        tasks.add(new ToDo("return book"));
-        tasks.add(new ToDo("buy milk"));
+    public void execute_matchingKeyword_displaysMatchingTasksWithPreservedIndices() throws BobException {
+        tasks.add(new ToDo("read book")); // index 1
+        tasks.add(new ToDo("return book")); // index 2
+        tasks.add(new ToDo("buy milk")); // index 3
+        tasks.add(new ToDo("read another book")); // index 4
 
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
@@ -36,7 +37,9 @@ public class FindCommandTest extends CommandTestBase {
         assertTrue(output.contains("Here are the matching tasks in your list:"));
         assertTrue(output.contains("1.[T][ ] read book"));
         assertTrue(output.contains("2.[T][ ] return book"));
+        assertTrue(output.contains("4.[T][ ] read another book"));
         assertFalse(output.contains("buy milk"));
+        assertFalse(output.contains("3."));
     }
 
     @Test

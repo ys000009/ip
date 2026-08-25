@@ -3,6 +3,7 @@ package bob.task;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a list of tasks and provides operations to manipulate the tasks.
@@ -27,21 +28,22 @@ public class TaskList implements Iterable<Task> {
     }
 
     /**
-     * Finds and returns a new {@link TaskList} containing all tasks whose
-     * description
-     * contains the given keyword.
+     * Finds tasks whose description contains the keyword, returning each matching
+     * task
+     * along with its 1-based position in the task list.
      *
      * @param keyword the search term to filter tasks by
-     * @return a {@link TaskList} of matching tasks
+     * @return a list of entries mapping 1-based task index to the matching task
      */
-    public TaskList find(String keyword) {
-        List<Task> matchingTasks = new ArrayList<>();
-        for (Task task : this.tasks) {
+    public List<Map.Entry<Integer, Task>> find(String keyword) {
+        List<Map.Entry<Integer, Task>> matchingTasks = new ArrayList<>();
+        for (int i = 0; i < this.tasks.size(); i++) {
+            Task task = this.tasks.get(i);
             if (task.containsKeyword(keyword)) {
-                matchingTasks.add(task);
+                matchingTasks.add(Map.entry(i + 1, task));
             }
         }
-        return new TaskList(matchingTasks);
+        return matchingTasks;
     }
 
     /**
