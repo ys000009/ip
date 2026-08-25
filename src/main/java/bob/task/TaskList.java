@@ -2,12 +2,13 @@ package bob.task;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Represents a list of tasks and provides operations to manipulate the tasks.
  */
 public class TaskList implements Iterable<Task> {
-    private final ArrayList<Task> tasks;
+    private final List<Task> tasks;
 
     /**
      * Constructs an empty TaskList.
@@ -21,8 +22,8 @@ public class TaskList implements Iterable<Task> {
      *
      * @param tasks the initial list of tasks
      */
-    public TaskList(ArrayList<Task> tasks) {
-        this.tasks = tasks != null ? tasks : new ArrayList<>();
+    public TaskList(List<Task> tasks) {
+        this.tasks = tasks != null ? new ArrayList<>(tasks) : new ArrayList<>();
     }
 
     /**

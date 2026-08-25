@@ -21,8 +21,7 @@ public abstract class Task {
     }
 
     /**
-     * Returns the string representation of the task showing status icon and
-     * description.
+     * Returns the string representation of the task showing status icon and description.
      *
      * @return string representation of this task
      */

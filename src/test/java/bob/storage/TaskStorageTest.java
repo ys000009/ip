@@ -25,7 +25,7 @@ import bob.task.ToDo;
 public class TaskStorageTest {
 
     @TempDir
-    Path tempDir;
+    private Path tempDir;
 
     @Test
     public void load_fileDoesNotExist_returnsEmptyTaskList() throws BobException {

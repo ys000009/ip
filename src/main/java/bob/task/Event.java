@@ -8,16 +8,15 @@ import bob.util.DatetimeHelper;
  * Represents an event task with a start time and an end time.
  */
 public class Event extends Task {
-    private LocalDateTime from;
-    private LocalDateTime to;
+    private final LocalDateTime from;
+    private final LocalDateTime to;
 
     /**
-     * Constructs an Event task with the specified description, start time, and end
-     * time.
+     * Constructs an Event task with the specified description, start time, and end time.
      *
      * @param name the description of the event task
      * @param from the start date/time
-     * @param to   the end date/time
+     * @param to the end date/time
      */
     public Event(String name, LocalDateTime from, LocalDateTime to) {
         super(name);

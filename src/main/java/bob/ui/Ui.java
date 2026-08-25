@@ -70,10 +70,7 @@ public class Ui {
     public void showTaskList(TaskList tasks) {
         System.out.println("Tasks:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println(String.format(
-                    "%d: %s",
-                    i + 1,
-                    tasks.get(i).toString()));
+            System.out.println(String.format("%d: %s", i + 1, tasks.get(i).toString()));
         }
     }
 
@@ -86,10 +83,7 @@ public class Ui {
     public void showTaskAdded(Task task, int totalCount) {
         System.out.println("Task added:");
         System.out.println(task.toString());
-        System.out.println(String.format(
-                "%d %s in list",
-                totalCount,
-                totalCount < 2 ? "item" : "items"));
+        System.out.println(String.format("%d %s in list", totalCount, totalCount < 2 ? "item" : "items"));
     }
 
     /**
@@ -101,10 +95,7 @@ public class Ui {
     public void showTaskDeleted(Task task, int totalCount) {
         System.out.println("Removed: ");
         System.out.println(task.toString());
-        System.out.println(String.format(
-                "%d %s in list",
-                totalCount,
-                totalCount < 2 ? "item" : "items"));
+        System.out.println(String.format("%d %s in list", totalCount, totalCount < 2 ? "item" : "items"));
     }
 
     /**

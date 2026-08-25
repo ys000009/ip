@@ -1,8 +1,6 @@
 package bob.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,11 +15,9 @@ public class ToDoTest {
         assertEquals("[T][ ] buy milk", todo.toString());
 
         todo.mark();
-        assertTrue(todo.isDone);
         assertEquals("[T][X] buy milk", todo.toString());
 
         todo.unmark();
-        assertFalse(todo.isDone);
         assertEquals("[T][ ] buy milk", todo.toString());
     }
 
