@@ -30,6 +30,9 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 
 ## Git
 
-Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
-Do not commit or push unless explicitly asked.
+* Use lightweight tags unless the user requests an annotated tag.
+* Follow the [se-education Git commit conventions](https://se-education.org/guides/conventions/git.html):
+  * **Subject line**: Imperative mood (e.g., `Add ...`, `Refactor ...`, `Extract ...`), concise summary (50 characters or less), no trailing period.
+  * **Body**: Separate from subject with a blank line. Explain the context/problem, use the "Let's" syntax to outline changes, and provide rationale for the change.
+* Do not commit or push unless explicitly asked.
+
