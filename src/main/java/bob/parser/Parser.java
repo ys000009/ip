@@ -1,19 +1,19 @@
-package parser;
+package bob.parser;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
-import commands.AddCommand;
-import commands.Command;
-import commands.DeleteCommand;
-import commands.ExitCommand;
-import commands.ListCommand;
-import commands.MarkCommand;
-import exceptions.BobException;
-import tasks.Deadline;
-import tasks.Event;
-import tasks.ToDo;
-import util.DatetimeHelper;
+import bob.command.AddCommand;
+import bob.command.Command;
+import bob.command.DeleteCommand;
+import bob.command.ExitCommand;
+import bob.command.ListCommand;
+import bob.command.MarkCommand;
+import bob.exception.BobException;
+import bob.task.Deadline;
+import bob.task.Event;
+import bob.task.ToDo;
+import bob.util.DatetimeHelper;
 
 /**
  * Parses user input into executable Command objects.

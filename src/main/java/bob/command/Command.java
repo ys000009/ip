@@ -1,9 +1,9 @@
-package commands;
+package bob.command;
 
-import exceptions.BobException;
-import storage.TaskStorage;
-import tasks.TaskList;
-import ui.Ui;
+import bob.exception.BobException;
+import bob.storage.TaskStorage;
+import bob.task.TaskList;
+import bob.ui.Ui;
 
 /**
  * Represents an executable command in the application.
@@ -13,8 +13,8 @@ public abstract class Command {
     /**
      * Executes the command with the given task list, user interface, and storage.
      *
-     * @param tasks the list of tasks
-     * @param ui the user interface handler
+     * @param tasks   the list of tasks
+     * @param ui      the user interface handler
      * @param storage the storage handler
      * @throws BobException if an error occurs during execution
      */
@@ -29,4 +29,3 @@ public abstract class Command {
         return false;
     }
 }
-

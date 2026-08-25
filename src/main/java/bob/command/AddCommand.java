@@ -1,10 +1,10 @@
-package commands;
+package bob.command;
 
-import exceptions.BobException;
-import storage.TaskStorage;
-import tasks.Task;
-import tasks.TaskList;
-import ui.Ui;
+import bob.exception.BobException;
+import bob.storage.TaskStorage;
+import bob.task.Task;
+import bob.task.TaskList;
+import bob.ui.Ui;
 
 /**
  * Command to add a task to the task list.
@@ -28,4 +28,3 @@ public class AddCommand extends Command {
         ui.showTaskAdded(this.task, tasks.size());
     }
 }
-

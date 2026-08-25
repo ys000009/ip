@@ -1,9 +1,9 @@
-package ui;
+package bob.ui;
 
 import java.util.Scanner;
 
-import tasks.Task;
-import tasks.TaskList;
+import bob.task.Task;
+import bob.task.TaskList;
 
 /**
  * Handles interactions with the user, such as reading input and displaying
@@ -80,7 +80,7 @@ public class Ui {
     /**
      * Displays the message after adding a task.
      *
-     * @param task the added task
+     * @param task       the added task
      * @param totalCount the total number of tasks after addition
      */
     public void showTaskAdded(Task task, int totalCount) {
@@ -95,7 +95,7 @@ public class Ui {
     /**
      * Displays the message after deleting a task.
      *
-     * @param task the deleted task
+     * @param task       the deleted task
      * @param totalCount the total number of tasks after deletion
      */
     public void showTaskDeleted(Task task, int totalCount) {
@@ -110,7 +110,7 @@ public class Ui {
     /**
      * Displays the message after marking or unmarking a task.
      *
-     * @param task the task that was marked or unmarked
+     * @param task   the task that was marked or unmarked
      * @param isDone true if marked as done, false if marked as not done
      */
     public void showTaskMarked(Task task, boolean isDone) {
