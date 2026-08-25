@@ -36,3 +36,9 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
   * **Body**: Separate from subject with a blank line. Explain the context/problem, use the "Let's" syntax to outline changes, and provide rationale for the change.
 * Do not commit or push unless explicitly asked.
 
+## Testing and test coverage:
+
+* **Target**: Focus JUnit tests on the top ~50% highest-value methods (prioritizing complex, core, or critical business logic, such as input parsing, persistent storage, command execution, and data models).
+* **Maintenance**: JUnit tests must be updated or added after each code change to continuously comply with this 50% coverage target.
+* Ensure all tests pass (`./gradlew test`) before considering a coding task complete.
+

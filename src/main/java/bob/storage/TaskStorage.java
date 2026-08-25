@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +38,21 @@ public class TaskStorage implements Storage<TaskList> {
 
     private final Path path;
 
+    /**
+     * Constructs a TaskStorage instance using the default storage path
+     * ({@code data/tasks.txt}).
+     */
     public TaskStorage() {
-        this.path = FILE_PATH;
+        this(FILE_PATH);
+    }
+
+    /**
+     * Constructs a TaskStorage instance with a custom file path.
+     *
+     * @param path the path to the storage file
+     */
+    public TaskStorage(Path path) {
+        this.path = path;
     }
 
     @Override
@@ -102,33 +116,37 @@ public class TaskStorage implements Storage<TaskList> {
 
         Task task;
 
-        switch (type) {
-            case "T":
-                task = new ToDo(name);
-                break;
+        try {
+            switch (type) {
+                case "T":
+                    task = new ToDo(name);
+                    break;
 
-            case "D":
-                if (parts.length != 4) {
-                    throw new BobException("Error: Corrupted deadline format: " + line);
-                }
+                case "D":
+                    if (parts.length != 4) {
+                        throw new BobException("Error: Corrupted deadline format: " + line);
+                    }
 
-                LocalDateTime deadline = LocalDateTime.parse(parts[3], DatetimeHelper.ISO_FORMATTER);
-                task = new Deadline(name, deadline);
-                break;
+                    LocalDateTime deadline = LocalDateTime.parse(parts[3], DatetimeHelper.ISO_FORMATTER);
+                    task = new Deadline(name, deadline);
+                    break;
 
-            case "E":
-                if (parts.length != 5) {
-                    throw new BobException("Error: Corrupted event format: " + line);
-                }
+                case "E":
+                    if (parts.length != 5) {
+                        throw new BobException("Error: Corrupted event format: " + line);
+                    }
 
-                LocalDateTime from = LocalDateTime.parse(parts[3], DatetimeHelper.ISO_FORMATTER);
-                LocalDateTime to = LocalDateTime.parse(parts[4], DatetimeHelper.ISO_FORMATTER);
+                    LocalDateTime from = LocalDateTime.parse(parts[3], DatetimeHelper.ISO_FORMATTER);
+                    LocalDateTime to = LocalDateTime.parse(parts[4], DatetimeHelper.ISO_FORMATTER);
 
-                task = new Event(name, from, to);
-                break;
+                    task = new Event(name, from, to);
+                    break;
 
-            default:
-                throw new BobException("Error: Unknown task type of " + type);
+                default:
+                    throw new BobException("Error: Unknown task type of " + type);
+            }
+        } catch (DateTimeParseException e) {
+            throw new BobException("Error: Corrupted date-time format: " + line);
         }
 
         if (isDone) {
