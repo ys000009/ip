@@ -114,14 +114,14 @@ Aim: Verify that a deadline command preserves its description and due date.
 ### Inputs
 
 ```text
-deadline return book /by Sunday
+deadline return book /by 2019-12-02 1800
 ```
 
 ### Expected output
 
 ```text
 Got it. I've added this task:
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: Dec 02 2019 18:00)
 Now you have 1 tasks in the list.
 ```
 
@@ -151,7 +151,7 @@ Aim: Verify that the Task array lists Todo, Deadline, and Event objects using th
 
 ```text
 todo borrow book
-deadline return book /by Sunday
+deadline return book /by 2019-12-02 1800
 event project meeting /from Mon 2pm /to 4pm
 list
 ```
@@ -163,14 +163,14 @@ Got it. I've added this task:
 [T][ ] borrow book
 Now you have 1 tasks in the list.
 Got it. I've added this task:
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: Dec 02 2019 18:00)
 Now you have 2 tasks in the list.
 Got it. I've added this task:
 [E][ ] project meeting (from: Mon 2pm to: 4pm)
 Now you have 3 tasks in the list.
 Here are the tasks in your list:
 1.[T][ ] borrow book
-2.[D][ ] return book (by: Sunday)
+2.[D][ ] return book (by: Dec 02 2019 18:00)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ```
 
@@ -182,7 +182,7 @@ Aim: Verify that delete removes the correct task and renumbers the remaining lis
 
 ```text
 todo borrow book
-deadline return book /by Sunday
+deadline return book /by 2019-12-02 1800
 event project meeting /from Mon 2pm /to 4pm
 delete 2
 list
@@ -196,13 +196,13 @@ Got it. I've added this task:
 [T][ ] borrow book
 Now you have 1 tasks in the list.
 Got it. I've added this task:
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: Dec 02 2019 18:00)
 Now you have 2 tasks in the list.
 Got it. I've added this task:
 [E][ ] project meeting (from: Mon 2pm to: 4pm)
 Now you have 3 tasks in the list.
 Noted. I've removed this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Dec 02 2019 18:00)
 Now you have 2 tasks in the list.
 Here are the tasks in your list:
 1.[T][ ] borrow book
@@ -229,4 +229,27 @@ Got it. I've added this task:
 Now you have 1 tasks in the list.
 Nice! I've marked this task as done:
   [T][X] remember persistence
+```
+
+## Test case: Reject invalid deadline without changing task state
+
+Aim: Verify that an invalid date is rejected and does not add a corrupted deadline task.
+
+### Inputs
+
+```text
+deadline return book /by 2019-02-30 1800
+deadline return book /by 2019-02-28 1800
+list
+```
+
+### Expected output
+
+```text
+OhNo!! ERROR :( --> please provide a valid deadline in yyyy-MM-dd HHmm format, e.g. 2019-12-02 1800
+Got it. I've added this task:
+[D][ ] return book (by: Feb 28 2019 18:00)
+Now you have 1 tasks in the list.
+Here are the tasks in your list:
+1.[D][ ] return book (by: Feb 28 2019 18:00)
 ```
