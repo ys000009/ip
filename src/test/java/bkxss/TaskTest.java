@@ -36,4 +36,12 @@ class TaskTest {
         assertFalse(todo.isDone());
         assertEquals(" ", todo.getStatusIcon());
     }
+
+    @Test
+    void task_matchesKeyword_isCaseInsensitiveAndSearchesDescriptionOnly() {
+        Todo todo = new Todo("Read a book");
+
+        assertTrue(todo.matchesKeyword("BOOK"));
+        assertFalse(todo.matchesKeyword("movie"));
+    }
 }

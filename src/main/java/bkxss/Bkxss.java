@@ -81,6 +81,21 @@ public class Bkxss {
         if (command.startsWith("list") && command.substring(4).isBlank()) {
             throw new BkxssException("omg! you've entered an empty space at the end of the \"list\" accidentally");
         }
+        if (command.equals("find") || command.startsWith("find ")) {
+            String keyword = command.substring(4).trim();
+            if (keyword.isBlank()) {
+                throw new BkxssException("please provide a keyword to search for. Use: find KEYWORD");
+            }
+            System.out.println(BOT_PREFIX + "Here are the matching tasks in your list:");
+            int matchNumber = 1;
+            for (Task task : tasks) {
+                if (task.matchesKeyword(keyword)) {
+                    System.out.println(BOT_PREFIX + matchNumber + "." + task);
+                    matchNumber++;
+                }
+            }
+            return false;
+        }
         if (command.equals("todo") || command.startsWith("todo ")) {
             addTask(new Todo(requireDescription(command.substring(4), "todo")), tasks);
             return true;

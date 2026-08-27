@@ -107,6 +107,43 @@ OhNo!! ERROR :( --> omg! you've entered an empty space at the end of the "list" 
 OhNo!! ERROR :( --> I'm sorry, but I don't know what that means :-(
 ```
 
+## Test case: Find tasks by description keyword
+
+Aim: Verify that find returns matching tasks case-insensitively, preserves task display formats, and rejects an empty keyword without changing the task list.
+
+### Inputs
+
+```text
+todo read book
+deadline return book /by 2019-12-02 1800
+event project meeting /from Mon 2pm /to 4pm
+find BOOK
+find
+list
+```
+
+### Expected output
+
+```text
+Got it. I've added this task:
+[T][ ] read book
+Now you have 1 tasks in the list.
+Got it. I've added this task:
+[D][ ] return book (by: Dec 02 2019 18:00)
+Now you have 2 tasks in the list.
+Got it. I've added this task:
+[E][ ] project meeting (from: Mon 2pm to: 4pm)
+Now you have 3 tasks in the list.
+Here are the matching tasks in your list:
+1.[T][ ] read book
+2.[D][ ] return book (by: Dec 02 2019 18:00)
+OhNo!! ERROR :( --> please provide a keyword to search for. Use: find KEYWORD
+Here are the tasks in your list:
+1.[T][ ] read book
+2.[D][ ] return book (by: Dec 02 2019 18:00)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+```
+
 ## Test case: Create deadline task
 
 Aim: Verify that a deadline command preserves its description and due date.
