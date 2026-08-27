@@ -1,5 +1,15 @@
 # Project context
 
+## Mandatory project standards
+
+* Follow [`project-skills/seedu-java-coding-standard/SKILL.md`](project-skills/seedu-java-coding-standard/SKILL.md) for all Java code, including tests.
+* Follow [`project-skills/seedu-git-standard/SKILL.md`](project-skills/seedu-git-standard/SKILL.md) for all future commit messages. Do not commit or push unless explicitly asked.
+
+## Mandatory project standards
+
+* Follow [`.agents/skills/seedu-java-coding-standard/SKILL.md`](.agents/skills/seedu-java-coding-standard/SKILL.md) for all Java code, including tests.
+* Follow [`.agents/skills/seedu-git-standard/SKILL.md`](.agents/skills/seedu-git-standard/SKILL.md) for all future commit messages. Do not commit or push unless explicitly asked.
+
 This repository is a starter template for a greenfield Java project used in an introductory software engineering course in an undergraduate computer science program. Students use it as the starting point for their own projects.
 
 # Default user context
