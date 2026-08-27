@@ -59,7 +59,7 @@ def main() -> int:
     build_dir = Path(tempfile.mkdtemp(prefix="bkxss-ui-tests-"))
     try:
         compile_result = subprocess.run(
-            ["javac", "-d", str(build_dir), *map(str, (ROOT / "src/main/java").glob("*.java"))],
+            ["javac", "-d", str(build_dir), *map(str, (ROOT / "src/main/java").rglob("*.java"))],
             cwd=ROOT, text=True, capture_output=True, check=False,
         )
         if compile_result.returncode:
@@ -68,10 +68,14 @@ def main() -> int:
 
         for name, aim, inputs, expected in cases:
             session_input = inputs + "\nbye\n"
-            result = subprocess.run(
-                ["java", "-cp", str(build_dir), "Bkxss"], cwd=ROOT,
-                input=session_input, text=True, capture_output=True, check=False,
-            )
+            session_dir = Path(tempfile.mkdtemp(prefix="bkxss-ui-session-"))
+            try:
+                result = subprocess.run(
+                    ["java", "-cp", str(build_dir), "bkxss.Bkxss"], cwd=session_dir,
+                    input=session_input, text=True, capture_output=True, check=False,
+                )
+            finally:
+                shutil.rmtree(session_dir)
             actual = response_only(result.stdout)
             print(f"\nTest case: {name}\nAim: {aim}\nConsole input:\n{inputs}\nConsole output:\n{actual}")
             if result.returncode or normalize(actual) != normalize(expected):
