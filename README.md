@@ -29,3 +29,24 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+## Creating and running a fat JAR
+
+This project uses the Shadow Gradle plugin to package the application and its runtime dependencies into one executable (fat) JAR. The configured output file is `bkxss.jar`.
+
+From the project root, make sure Java 25 is active, then run:
+
+```sh
+sdk use java 25.0.3.fx-zulu
+./gradlew shadowJar
+```
+
+The JAR is created at `build/libs/bkxss.jar`. It includes the `bkxss.Bkxss` main class, so it can be run directly:
+
+```sh
+java -jar build/libs/bkxss.jar
+```
+
+Type commands such as `todo borrow book`, and type `bye` to exit. The application reads and writes task data at `data/bkxss.txt`, so run the JAR from the project root if you want to use that file.
+
+To create a fresh artifact after changing source code, run `./gradlew clean shadowJar`. You can inspect the generated files with `ls -lh build/libs/`.
