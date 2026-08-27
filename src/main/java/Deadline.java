@@ -1,27 +1,41 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * A task that must be completed by a specified time.
  */
 public class Deadline extends Task {
-    private final String by;
+    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+    private final LocalDateTime by;
 
     /**
      * Creates an incomplete deadline task.
      *
      * @param description text that describes the task
-     * @param by deadline supplied by the user
+     * @param by parsed deadline supplied by the user
      */
-    public Deadline(String description, String by) {
+    public Deadline(String description, LocalDateTime by) {
         super(description);
         this.by = by;
     }
 
     /** Returns the deadline text for persistence. */
-    public String getBy() {
+    public LocalDateTime getBy() {
         return by;
+    }
+
+    /** Returns the deadline in the same format shown by the list command. */
+    public String getFormattedBy() {
+        return by.format(DISPLAY_FORMAT);
+    }
+
+    /** Parses the display format used when deadlines are saved. */
+    public static LocalDateTime parseFormattedBy(String text) {
+        return LocalDateTime.parse(text.trim(), DISPLAY_FORMAT);
     }
 
     @Override
     public String toString() {
-        return "[D][" + getStatusIcon() + "] " + description + " (by: " + by + ")";
+        return "[D][" + getStatusIcon() + "] " + description + " (by: " + getFormattedBy() + ")";
     }
 }

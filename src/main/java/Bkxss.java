@@ -3,12 +3,21 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.Scanner;
 
 /**
  * Starts the Bkxss chatbot and displays its initial greeting.
  */
 public class Bkxss {
+    private static final DateTimeFormatter INPUT_DATE_FORMAT = new DateTimeFormatterBuilder()
+            .appendPattern("uuuu-MM-dd HHmm")
+            .toFormatter()
+            .withResolverStyle(ResolverStyle.STRICT);
     private static final Path DATA_FILE = Path.of(".", "data", "bkxss.txt");
     private static final String BOT_PREFIX = "     ";
     private static final String DIVIDER = "    ____________________________________________________________";
@@ -83,7 +92,7 @@ public class Bkxss {
             if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
                 throw new BkxssException("a deadline needs a description and a due date. Use: deadline DESCRIPTION /by DATE");
             }
-            addTask(new Deadline(parts[0], parts[1]), tasks);
+            addTask(new Deadline(parts[0], parseDeadline(parts[1])), tasks);
             return true;
         }
         if (command.equals("event") || command.startsWith("event ")) {
@@ -123,6 +132,15 @@ public class Bkxss {
             return true;
         }
         throw new BkxssException("I'm sorry, but I don't know what that means :-(");
+    }
+
+    /** Parses a deadline and gives the user a useful error for invalid dates. */
+    private static LocalDateTime parseDeadline(String text) throws BkxssException {
+        try {
+            return LocalDateTime.parse(text.trim(), INPUT_DATE_FORMAT);
+        } catch (DateTimeParseException exception) {
+            throw new BkxssException("please provide a valid deadline in yyyy-MM-dd HHmm format, e.g. 2019-12-02 1800");
+        }
     }
 
     /** Adds a task to the list and prints a confirmation. */
@@ -171,7 +189,7 @@ public class Bkxss {
                 if (type.equals("T") && fields.length == 3) {
                     task = new Todo(fields[2]);
                 } else if (type.equals("D") && fields.length == 4) {
-                    task = new Deadline(fields[2], fields[3]);
+                    task = new Deadline(fields[2], parseSavedDeadline(fields[3]));
                 } else if (type.equals("E") && fields.length == 4) {
                     String[] times = fields[3].split(" to ", 2);
                     if (times.length != 2) {
@@ -192,6 +210,11 @@ public class Bkxss {
         return tasks;
     }
 
+    /** Parses the persisted machine-readable deadline representation. */
+    private static LocalDateTime parseSavedDeadline(String text) {
+        return Deadline.parseFormattedBy(text);
+    }
+
     /** Saves all tasks, creating the data directory when necessary. */
     private static void saveTasks(ArrayList<Task> tasks) {
         try {
@@ -201,7 +224,8 @@ public class Bkxss {
                 if (task instanceof Todo) {
                     lines.add("T | " + status(task) + " | " + task.description);
                 } else if (task instanceof Deadline deadline) {
-                    lines.add("D | " + status(task) + " | " + task.description + " | " + deadline.getBy());
+                    lines.add("D | " + status(task) + " | " + task.description + " | "
+                            + deadline.getFormattedBy());
                 } else if (task instanceof Event event) {
                     lines.add("E | " + status(task) + " | " + task.description + " | " + event.getFrom() + " to " + event.getTo());
                 }
