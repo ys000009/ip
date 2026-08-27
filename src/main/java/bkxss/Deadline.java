@@ -36,6 +36,7 @@ public class Deadline extends Task {
         return LocalDateTime.parse(text.trim(), DISPLAY_FORMAT);
     }
 
+    /** Returns the display text for this deadline task. */
     @Override
     public String toString() {
         return "[D][" + getStatusIcon() + "] " + description + " (by: " + getFormattedBy() + ")";

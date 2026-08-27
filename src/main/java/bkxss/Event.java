@@ -30,6 +30,7 @@ public class Event extends Task {
         return to;
     }
 
+    /** Returns the display text for this event task. */
     @Override
     public String toString() {
         return "[E][" + getStatusIcon() + "] " + description

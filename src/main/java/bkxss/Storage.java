@@ -64,6 +64,7 @@ public class Storage {
         }
     }
 
+    /** Converts one persistence record into a task, ignoring unsupported records. */
     private static Task parseTask(String[] fields) {
         Task task;
         if (fields[0].equals("T") && fields.length == 3) {
@@ -85,6 +86,7 @@ public class Storage {
         return task;
     }
 
+    /** Converts a task's completion state to the file format's numeric flag. */
     private static String status(Task task) {
         return task.isDone() ? "1" : "0";
     }

@@ -13,6 +13,7 @@ public class Todo extends Task {
         super(description);
     }
 
+    /** Returns the display text for this todo task. */
     @Override
     public String toString() {
         return "[T][" + getStatusIcon() + "] " + description;
