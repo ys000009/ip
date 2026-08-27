@@ -45,3 +45,5 @@ Do not commit or push unless explicitly asked.
 * When adding or modifying features, add test cases to `test/ui-test-plan.md` that interleave valid and invalid inputs, to verify that invalid inputs do not corrupt internal state (e.g., the task list).
 * Before considering a task complete, run the `test-ui` skill (or manually verify) that all test cases pass.
 * Periodically verify test effectiveness: introduce a deliberate bug, confirm the test plan catches it, then revert the bug.
+* Maintain JUnit tests for approximately the highest-value 50% of methods, prioritizing core business logic, state transitions, parsing, and persistence.
+* Update the JUnit tests after every code change so the project continues to meet the 50% high-value method coverage target.
