@@ -1,5 +1,7 @@
 package bkxss;
 
+import java.util.Locale;
+
 /**
  * Represents one task and whether it has been completed.
  */
@@ -33,6 +35,17 @@ public abstract class Task {
      */
     public boolean isDone() {
         return isDone;
+    }
+
+    /**
+     * Checks whether this task's description contains the supplied keyword.
+     * Matching is case-insensitive so searches are convenient for users.
+     *
+     * @param keyword text to look for in the description
+     * @return {@code true} when the description contains the keyword
+     */
+    public boolean matchesKeyword(String keyword) {
+        return description.toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT));
     }
 
     /** Marks this task as completed. */
