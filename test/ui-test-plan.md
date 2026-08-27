@@ -1,8 +1,9 @@
 # UI test plan
 
-The `test-ui` skill runs each case in a fresh Bkxss session. Inputs are sent in
+The `test-ui` skill runs each case in a fresh Bkxss process. Inputs are sent in
 order, followed by `bye`. Expected output includes only the responses to the
-listed inputs, not the greeting or farewell.
+listed inputs, not the greeting or farewell. Persistence tests use the shared
+relative data file and should be run with a clean `data/bkxss.txt` first.
 
 ## Test case: Create todo task
 
@@ -207,4 +208,25 @@ Here are the tasks in your list:
 1.[T][ ] borrow book
 2.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 OhNo!! ERROR :( --> there is no task numbered 5.
+```
+
+## Test case: Save and reload tasks
+
+Aim: Verify that changed tasks are saved and loaded by a later chatbot startup.
+
+### Inputs
+
+```text
+todo remember persistence
+mark 1
+```
+
+### Expected output
+
+```text
+Got it. I've added this task:
+[T][ ] remember persistence
+Now you have 1 tasks in the list.
+Nice! I've marked this task as done:
+  [T][X] remember persistence
 ```
