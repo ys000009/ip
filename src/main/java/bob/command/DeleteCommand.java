@@ -7,7 +7,7 @@ import bob.task.TaskList;
 import bob.ui.Ui;
 
 /**
- * Command to delete a task from the task list.
+ * Represents a command to delete a task from the task list.
  */
 public class DeleteCommand extends Command {
     private final int taskId;

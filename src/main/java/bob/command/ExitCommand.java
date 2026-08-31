@@ -6,7 +6,7 @@ import bob.task.TaskList;
 import bob.ui.Ui;
 
 /**
- * Command to exit the application.
+ * Represents a command to exit the application.
  */
 public class ExitCommand extends Command {
 

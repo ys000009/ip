@@ -7,7 +7,7 @@ import bob.task.TaskList;
 import bob.ui.Ui;
 
 /**
- * Command to mark or unmark a task in the task list.
+ * Represents a command to mark or unmark a task in the task list.
  */
 public class MarkCommand extends Command {
     private final int taskId;

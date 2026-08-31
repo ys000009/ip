@@ -6,7 +6,7 @@ import bob.task.TaskList;
 import bob.ui.Ui;
 
 /**
- * Command to display all tasks in the task list.
+ * Represents a command to display all tasks in the task list.
  */
 public class ListCommand extends Command {
 

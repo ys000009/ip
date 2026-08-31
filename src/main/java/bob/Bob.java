@@ -51,15 +51,9 @@ public class Bob {
     }
 
     /**
-<<<<<<< HEAD
      * Initializes and launches the Bob application.
      *
      * @param args command-line arguments (not used)
-=======
-     * Starts the Bob task manager application.
-     *
-     * @param args command-line arguments
->>>>>>> branch-Level-9
      */
     public static void main(String[] args) {
         new Bob().run();
