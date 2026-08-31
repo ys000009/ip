@@ -22,7 +22,7 @@ import bob.util.DatetimeHelper;
  * <p>
  * Tasks are stored in a text file using a type-specific format:
  * </p>
- * 
+ *
  * <pre>
  * {@link ToDo}:      T | status | name
  * {@link Deadline}:  D | status | name | deadline
@@ -177,4 +177,4 @@ public class TaskStorage implements Storage<TaskList> {
 
         return task;
     }
-}
+}
