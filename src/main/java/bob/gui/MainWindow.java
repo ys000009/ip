@@ -54,7 +54,8 @@ public final class MainWindow extends AnchorPane {
     }
 
     /**
-     * Handles the user input event, generating Bob's response and updating the dialog container.
+     * Handles the user input event, generating Bob's response and updating the
+     * dialog container.
      */
     @FXML
     private void handleUserInput() {
@@ -70,7 +71,7 @@ public final class MainWindow extends AnchorPane {
         userInput.clear();
 
         if (bob.isExit()) {
-            PauseTransition delay = new PauseTransition(Duration.seconds(1));
+            PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
             delay.setOnFinished(event -> Platform.exit());
             delay.play();
         }
