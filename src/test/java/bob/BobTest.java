@@ -1,5 +1,6 @@
 package bob;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -28,5 +29,16 @@ public class BobTest {
         String errorResponse = bob.getResponse("invalid command 123");
         assertNotNull(errorResponse);
         assertTrue(errorResponse.contains("What's that?"));
+    }
+
+    @Test
+    public void getResponse_byeCommand_setsIsExitTrue() {
+        Bob bob = new Bob();
+        assertFalse(bob.isExit());
+
+        String response = bob.getResponse("bye");
+        assertNotNull(response);
+        assertTrue(response.contains("Goodbye."));
+        assertTrue(bob.isExit());
     }
 }

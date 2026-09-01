@@ -15,6 +15,8 @@ public class Bob {
     private TaskList tasks;
     private final Ui ui;
 
+    private boolean isExit = false;
+
     /**
      * Constructs a new Bob application instance.
      */
@@ -34,15 +36,16 @@ public class Bob {
      */
     public void run() {
         ui.showWelcome();
-        boolean isExit = false;
+        boolean isRunning = true;
 
-        while (!isExit && ui.hasNextCommand()) {
+        while (isRunning && ui.hasNextCommand()) {
             String fullCommand = ui.readCommand();
             ui.showDividerLine();
             try {
                 Command c = Parser.parse(fullCommand);
                 c.execute(tasks, ui, storage);
-                isExit = c.isExit();
+                this.isExit = c.isExit();
+                isRunning = !this.isExit;
             } catch (BobException e) {
                 ui.showError(e.getMessage());
             }
@@ -60,11 +63,21 @@ public class Bob {
         try {
             Command c = Parser.parse(input);
             c.execute(tasks, ui, storage);
+            this.isExit = c.isExit();
             return ui.getLastResponse();
         } catch (BobException e) {
             ui.showError(e.getMessage());
             return ui.getLastResponse();
         }
+    }
+
+    /**
+     * Checks whether the application has received an exit command.
+     *
+     * @return true if an exit command was executed, false otherwise
+     */
+    public boolean isExit() {
+        return isExit;
     }
 
     /**
