@@ -26,7 +26,12 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 ## Java version:
 
-Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
+Ensure that Java 25 is used when running the application or build tasks.
+* **macOS**: Use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
+* **Windows**: Java 25 is installed at `C:\Program Files\Java\jdk-25`. When running Gradle or Java commands via PowerShell, ensure `JAVA_HOME` is set:
+  ```powershell
+  $env:JAVA_HOME = 'C:\Program Files\Java\jdk-25'; .\gradlew.bat <task>
+  ```
 
 ## Git
 

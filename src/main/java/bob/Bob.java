@@ -15,6 +15,8 @@ public class Bob {
     private TaskList tasks;
     private final Ui ui;
 
+    private boolean isExit = false;
+
     /**
      * Constructs a new Bob application instance.
      */
@@ -30,24 +32,62 @@ public class Bob {
     }
 
     /**
-     * Runs the main command loop of the application.
+     * Runs the main command loop of the application in CLI mode.
      */
     public void run() {
         ui.showWelcome();
-        boolean isExit = false;
+        boolean isRunning = true;
 
-        while (!isExit && ui.hasNextCommand()) {
+        while (isRunning && ui.hasNextCommand()) {
             String fullCommand = ui.readCommand();
             ui.showDividerLine();
             try {
                 Command c = Parser.parse(fullCommand);
                 c.execute(tasks, ui, storage);
-                isExit = c.isExit();
+                this.isExit = c.isExit();
+                isRunning = !this.isExit;
             } catch (BobException e) {
                 ui.showError(e.getMessage());
             }
             ui.showDividerLine();
         }
+    }
+
+    /**
+     * Generates a response for the user's chat message input in GUI mode.
+     *
+     * @param input the raw input command string entered by the user
+     * @return the response string generated after command execution or error handling
+     */
+    public String getResponse(String input) {
+        try {
+            Command c = Parser.parse(input);
+            c.execute(tasks, ui, storage);
+            this.isExit = c.isExit();
+            return ui.getLastResponse();
+        } catch (BobException e) {
+            ui.showError(e.getMessage());
+            return ui.getLastResponse();
+        }
+    }
+
+    /**
+     * Checks whether the application has received an exit command.
+     *
+     * @return true if an exit command was executed, false otherwise
+     */
+    public boolean isExit() {
+        return isExit;
+    }
+
+    /**
+     * Returns the welcome greeting message for the user.
+     *
+     * @return the initial greeting string
+     */
+    public String getGreeting() {
+        ui.showWelcome();
+        return ui.getLastResponse();
     }
 
     /**
