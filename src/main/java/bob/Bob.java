@@ -30,7 +30,7 @@ public class Bob {
     }
 
     /**
-     * Runs the main command loop of the application.
+     * Runs the main command loop of the application in CLI mode.
      */
     public void run() {
         ui.showWelcome();
@@ -48,6 +48,33 @@ public class Bob {
             }
             ui.showDividerLine();
         }
+    }
+
+    /**
+     * Generates a response for the user's chat message input in GUI mode.
+     *
+     * @param input the raw input command string entered by the user
+     * @return the response string generated after command execution or error handling
+     */
+    public String getResponse(String input) {
+        try {
+            Command c = Parser.parse(input);
+            c.execute(tasks, ui, storage);
+            return ui.getLastResponse();
+        } catch (BobException e) {
+            ui.showError(e.getMessage());
+            return ui.getLastResponse();
+        }
+    }
+
+    /**
+     * Returns the welcome greeting message for the user.
+     *
+     * @return the initial greeting string
+     */
+    public String getGreeting() {
+        ui.showWelcome();
+        return ui.getLastResponse();
     }
 
     /**

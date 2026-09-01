@@ -57,7 +57,7 @@ test {
 }
 
 application {
-    mainClass = 'bob.Bob'
+    mainClass = 'bob.Launcher'
 }
 
 jar {

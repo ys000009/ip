@@ -14,6 +14,7 @@ import bob.task.TaskList;
 public class Ui {
     private static final String HORIZONTAL_LINE = "_".repeat(30);
     private final Scanner scanner;
+    private String lastResponse = "";
 
     /**
      * Constructs a new Ui instance with standard input scanner.
@@ -26,9 +27,10 @@ public class Ui {
      * Displays the welcome greeting to the user.
      */
     public void showWelcome() {
+        String message = "Hello! I'm Bob.\nWhat can I do for you?";
+        this.lastResponse = message;
         showDividerLine();
-        System.out.println("Hello! I'm Bob.");
-        System.out.println("What can I do for you?");
+        System.out.println(message);
         showDividerLine();
     }
 
@@ -36,7 +38,9 @@ public class Ui {
      * Displays the goodbye message to the user.
      */
     public void showGoodbye() {
-        System.out.println("Goodbye.");
+        String message = "Goodbye.";
+        this.lastResponse = message;
+        System.out.println(message);
     }
 
     /**
@@ -70,10 +74,15 @@ public class Ui {
      * @param tasks the task list to display
      */
     public void showTaskList(TaskList tasks) {
-        System.out.println("Tasks:");
+        StringBuilder sb = new StringBuilder("Tasks:\n");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println(String.format("%d: %s", i + 1, tasks.get(i).toString()));
+            sb.append(String.format("%d: %s", i + 1, tasks.get(i).toString()));
+            if (i < tasks.size() - 1) {
+                sb.append("\n");
+            }
         }
+        this.lastResponse = sb.toString();
+        System.out.println(this.lastResponse);
     }
 
     /**
@@ -84,10 +93,16 @@ public class Ui {
      *                        matching tasks
      */
     public void showMatchingTasks(List<Map.Entry<Integer, Task>> matchingEntries) {
-        System.out.println("Here are the matching tasks in your list:");
-        for (Map.Entry<Integer, Task> entry : matchingEntries) {
-            System.out.println(String.format("%d.%s", entry.getKey(), entry.getValue().toString()));
+        StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
+        for (int i = 0; i < matchingEntries.size(); i++) {
+            Map.Entry<Integer, Task> entry = matchingEntries.get(i);
+            sb.append(String.format("%d.%s", entry.getKey(), entry.getValue().toString()));
+            if (i < matchingEntries.size() - 1) {
+                sb.append("\n");
+            }
         }
+        this.lastResponse = sb.toString();
+        System.out.println(this.lastResponse);
     }
 
     /**
@@ -97,9 +112,10 @@ public class Ui {
      * @param totalCount the total number of tasks after addition
      */
     public void showTaskAdded(Task task, int totalCount) {
-        System.out.println("Task added:");
-        System.out.println(task.toString());
-        System.out.println(String.format("%d %s in list", totalCount, totalCount < 2 ? "item" : "items"));
+        String message = String.format("Task added:\n%s\n%d %s in list",
+                task.toString(), totalCount, totalCount < 2 ? "item" : "items");
+        this.lastResponse = message;
+        System.out.println(message);
     }
 
     /**
@@ -109,9 +125,10 @@ public class Ui {
      * @param totalCount the total number of tasks after deletion
      */
     public void showTaskDeleted(Task task, int totalCount) {
-        System.out.println("Removed: ");
-        System.out.println(task.toString());
-        System.out.println(String.format("%d %s in list", totalCount, totalCount < 2 ? "item" : "items"));
+        String message = String.format("Removed: \n%s\n%d %s in list",
+                task.toString(), totalCount, totalCount < 2 ? "item" : "items");
+        this.lastResponse = message;
+        System.out.println(message);
     }
 
     /**
@@ -121,12 +138,10 @@ public class Ui {
      * @param isDone true if marked as done, false if marked as not done
      */
     public void showTaskMarked(Task task, boolean isDone) {
-        if (isDone) {
-            System.out.println("Marked as done:");
-        } else {
-            System.out.println("Marked as not done:");
-        }
-        System.out.println(" " + task.toString());
+        String status = isDone ? "Marked as done:" : "Marked as not done:";
+        String message = status + "\n " + task.toString();
+        this.lastResponse = message;
+        System.out.println(message);
     }
 
     /**
@@ -135,6 +150,7 @@ public class Ui {
      * @param message the message to display
      */
     public void showMessage(String message) {
+        this.lastResponse = message;
         System.out.println(message);
     }
 
@@ -144,7 +160,17 @@ public class Ui {
      * @param message the error message to display
      */
     public void showError(String message) {
+        this.lastResponse = message;
         System.out.println(message);
+    }
+
+    /**
+     * Returns the most recent response message generated by the UI.
+     *
+     * @return the last generated response string
+     */
+    public String getLastResponse() {
+        return lastResponse;
     }
 
     /**
