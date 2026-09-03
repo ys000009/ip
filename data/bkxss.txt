@@ -2,3 +2,4 @@ T | 0 | read book
 T | 0 | read story
 T | 0 | watch movie
 T | 0 | timi
+T | 1 | play games
