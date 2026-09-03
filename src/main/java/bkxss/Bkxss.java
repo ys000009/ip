@@ -7,6 +7,8 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 /**
  * Starts the Bkxss chatbot and displays its initial greeting.
@@ -18,6 +20,27 @@ public class Bkxss {
             .withResolverStyle(ResolverStyle.STRICT);
     private static final String BOT_PREFIX = "     ";
     private static final String DIVIDER = "    ____________________________________________________________";
+
+    /** Processes one command for a graphical client and returns the bot's response. */
+    public static String processCommand(String command, ArrayList<Task> tasks, Storage storage) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream originalOutput = System.out;
+        try {
+            System.setOut(new PrintStream(output));
+            if (command.equals("bye")) {
+                return "Bye. Hope to see you again soon!";
+            }
+            boolean changed = handleCommand(command, tasks);
+            if (changed) {
+                storage.save(tasks);
+            }
+        } catch (BkxssException exception) {
+            System.out.println(BOT_PREFIX + "OhNo!! ERROR :( --> " + exception.getMessage());
+        } finally {
+            System.setOut(originalOutput);
+        }
+        return output.toString().strip().replace(BOT_PREFIX, "");
+    }
 
     /**
      * Greets the user, stores task descriptions, lists stored tasks, and exits when the user enters {@code bye}.
