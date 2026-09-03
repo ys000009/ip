@@ -47,7 +47,7 @@ public class Bkxss {
      *
      * @param args command-line arguments, which are not used by this application
      */
-    public static void main(String[] args) {
+    public static void main(String... args) {
         Storage storage = new Storage("data/bkxss.txt");
         ArrayList<Task> tasks = storage.load();
         String banner = "____  _                   \n"
