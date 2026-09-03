@@ -103,7 +103,8 @@ public class Bkxss {
         if (command.equals("deadline") || command.startsWith("deadline ")) {
             String[] parts = command.substring(8).trim().split(" /by ", 2);
             if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
-                throw new BkxssException("a deadline needs a description and a due date. Use: deadline DESCRIPTION /by DATE");
+                throw new BkxssException("a deadline needs a description and a due date. "
+                        + "Use: deadline DESCRIPTION /by DATE");
             }
             addTask(new Deadline(parts[0], parseDeadline(parts[1])), tasks);
             return true;
@@ -111,7 +112,8 @@ public class Bkxss {
         if (command.equals("event") || command.startsWith("event ")) {
             String[] parts = command.substring(5).trim().split(" /from | /to ", 3);
             if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) {
-                throw new BkxssException("an event needs a description, start, and end time. Use: event DESCRIPTION /from START /to END");
+                throw new BkxssException("an event needs a description, start, and end time. "
+                        + "Use: event DESCRIPTION /from START /to END");
             }
             addTask(new Event(parts[0], parts[1], parts[2]), tasks);
             return true;
