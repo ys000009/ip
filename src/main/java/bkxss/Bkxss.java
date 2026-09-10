@@ -184,6 +184,7 @@ public class Bkxss {
     /** Adds a task to the list and prints a confirmation. */
     private static void addTask(Task task, ArrayList<Task> tasks) {
         tasks.add(task);
+        assert tasks.contains(task) : "Added task must be present in the task list";
         System.out.println(BOT_PREFIX + "Got it. I've added this task:");
         System.out.println(BOT_PREFIX + task);
         System.out.println(BOT_PREFIX + "Now you have " + tasks.size() + " tasks in the list.");
