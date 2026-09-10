@@ -21,6 +21,15 @@ public class Bkxss {
             .withResolverStyle(ResolverStyle.STRICT);
     private static final String BOT_PREFIX = "     ";
     private static final String DIVIDER = "    ____________________________________________________________";
+    private static final int LIST_COMMAND_LENGTH = 4;
+    private static final int FIND_COMMAND_LENGTH = 4;
+    private static final int TODO_COMMAND_LENGTH = 4;
+    private static final int DEADLINE_COMMAND_LENGTH = 8;
+    private static final int EVENT_COMMAND_LENGTH = 5;
+    private static final int MARK_COMMAND_LENGTH = 4;
+    private static final int UNMARK_COMMAND_LENGTH = 6;
+    private static final int DELETE_COMMAND_LENGTH = 6;
+    private static final int TASK_NUMBER_OFFSET = 1;
 
     /** Processes one command for a graphical client and returns the bot's response. */
     public static String processCommand(String command, ArrayList<Task> tasks, Storage storage) {
@@ -102,11 +111,11 @@ public class Bkxss {
             }
             return false;
         }
-        if (command.startsWith("list") && command.substring(4).isBlank()) {
+        if (command.startsWith("list") && command.substring(LIST_COMMAND_LENGTH).isBlank()) {
             throw new BkxssException("omg! you've entered an empty space at the end of the \"list\" accidentally");
         }
         if (command.equals("find") || command.startsWith("find ")) {
-            String keyword = command.substring(4).trim();
+            String keyword = command.substring(FIND_COMMAND_LENGTH).trim();
             if (keyword.isBlank()) {
                 throw new BkxssException("please provide a keyword to search for. Use: find KEYWORD");
             }
@@ -119,11 +128,11 @@ public class Bkxss {
             return false;
         }
         if (command.equals("todo") || command.startsWith("todo ")) {
-            addTask(new Todo(requireDescription(command.substring(4), "todo")), tasks);
+            addTask(new Todo(requireDescription(command.substring(TODO_COMMAND_LENGTH), "todo")), tasks);
             return true;
         }
         if (command.equals("deadline") || command.startsWith("deadline ")) {
-            String[] parts = command.substring(8).trim().split(" /by ", 2);
+            String[] parts = command.substring(DEADLINE_COMMAND_LENGTH).trim().split(" /by ", 2);
             if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
                 throw new BkxssException("a deadline needs a description and a due date. "
                         + "Use: deadline DESCRIPTION /by DATE");
@@ -132,7 +141,7 @@ public class Bkxss {
             return true;
         }
         if (command.equals("event") || command.startsWith("event ")) {
-            String[] parts = command.substring(5).trim().split(" /from | /to ", 3);
+            String[] parts = command.substring(EVENT_COMMAND_LENGTH).trim().split(" /from | /to ", 3);
             if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) {
                 throw new BkxssException("an event needs a description, start, and end time. "
                         + "Use: event DESCRIPTION /from START /to END");
@@ -141,7 +150,7 @@ public class Bkxss {
             return true;
         }
         if (command.equals("mark") || command.startsWith("mark ")) {
-            Task task = getTask(command.substring(4), tasks);
+            Task task = getTask(command.substring(MARK_COMMAND_LENGTH), tasks);
             if (task.isDone()) {
                 throw new BkxssException("this task is already marked as done!");
             }
@@ -151,7 +160,7 @@ public class Bkxss {
             return true;
         }
         if (command.equals("unmark") || command.startsWith("unmark ")) {
-            Task task = getTask(command.substring(6), tasks);
+            Task task = getTask(command.substring(UNMARK_COMMAND_LENGTH), tasks);
             if (!task.isDone()) {
                 throw new BkxssException("this task is already unmarked!");
             }
@@ -161,7 +170,7 @@ public class Bkxss {
             return true;
         }
         if (command.equals("delete") || command.startsWith("delete ")) {
-            Task task = getTask(command.substring(6), tasks);
+            Task task = getTask(command.substring(DELETE_COMMAND_LENGTH), tasks);
             tasks.remove(task);
             System.out.println(BOT_PREFIX + "Noted. I've removed this task:");
             System.out.println(BOT_PREFIX + "  " + task);
@@ -201,10 +210,10 @@ public class Bkxss {
     private static Task getTask(String numberText, ArrayList<Task> tasks) throws BkxssException {
         try {
             int taskNumber = Integer.parseInt(numberText.trim());
-            if (taskNumber < 1 || taskNumber > tasks.size()) {
+            if (taskNumber < TASK_NUMBER_OFFSET || taskNumber > tasks.size()) {
                 throw new BkxssException("there is no task numbered " + taskNumber + ".");
             }
-            return tasks.get(taskNumber - 1);
+            return tasks.get(taskNumber - TASK_NUMBER_OFFSET);
         } catch (NumberFormatException exception) {
             throw new BkxssException("please provide a task number. Use: mark/unmark/delete NUMBER");
         }
