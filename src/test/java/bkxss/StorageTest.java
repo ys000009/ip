@@ -54,4 +54,19 @@ class StorageTest {
         assertEquals(1, loaded.size());
         assertEquals("[T][ ] valid task", loaded.get(0).toString());
     }
+
+    @Test
+    void storage_saveAndLoad_datedEvent_preservesScheduleTimes() throws Exception {
+        Path dataFile = Files.createTempDirectory("bkxss-storage-test").resolve("tasks.txt");
+        Storage storage = new Storage(dataFile.toString());
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Event("lecture", "2026-09-12 0900", "2026-09-12 1100"));
+
+        storage.save(tasks);
+        Event loadedEvent = (Event) storage.load().get(0);
+
+        assertTrue(loadedEvent.hasScheduledTimes());
+        assertEquals(LocalDateTime.of(2026, 9, 12, 9, 0), loadedEvent.getFromDateTime().orElseThrow());
+        assertEquals(LocalDateTime.of(2026, 9, 12, 11, 0), loadedEvent.getToDateTime().orElseThrow());
+    }
 }

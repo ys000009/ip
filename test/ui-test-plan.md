@@ -290,3 +290,72 @@ Now you have 1 tasks in the list.
 Here are the tasks in your list:
 1.[D][ ] return book (by: Feb 28 2019 18:00)
 ```
+
+## Test case: Find the earliest free time
+
+Aim: Verify that findfree finds an exact-sized gap and reports when no gap is long enough.
+
+### Inputs
+
+```text
+event lecture /from 2026-09-12 0900 /to 2026-09-12 1000
+event workshop /from 2026-09-12 1200 /to 2026-09-12 1500
+findfree 2 /from 2026-09-12 0900 /to 2026-09-12 1700
+findfree 3 /from 2026-09-12 0900 /to 2026-09-12 1700
+```
+
+### Expected output
+
+```text
+Got it. I've added this task:
+[E][ ] lecture (from: 2026-09-12 0900 to: 2026-09-12 1000)
+Now you have 1 tasks in the list.
+Got it. I've added this task:
+[E][ ] workshop (from: 2026-09-12 1200 to: 2026-09-12 1500)
+Now you have 2 tasks in the list.
+The earliest 2-hour free slot is:
+  Sep 12 2026 10:00 to Sep 12 2026 12:00
+I couldn't find a 3-hour free slot between Sep 12 2026 09:00 and Sep 12 2026 17:00.
+```
+
+## Test case: Reject invalid free-time inputs without changing tasks
+
+Aim: Verify that invalid searches and event ranges do not corrupt state, and legacy events are handled safely.
+
+### Inputs
+
+```text
+event lecture /from 2026-09-12 0900 /to 2026-09-12 1000
+findfree 0 /from 2026-09-12 0900 /to 2026-09-12 1700
+findfree 2 /from 2026-02-30 0900 /to 2026-09-12 1700
+event impossible /from 2026-09-12 1200 /to 2026-09-12 1100
+findfree 1 /from 2026-09-12 1700 /to 2026-09-12 0900
+event vague meeting /from Mon 2pm /to 4pm
+findfree 2 /from 2026-09-12 0900 /to 2026-09-12 1700
+delete 2
+findfree 2 /from 2026-09-12 0900 /to 2026-09-12 1700
+list
+```
+
+### Expected output
+
+```text
+Got it. I've added this task:
+[E][ ] lecture (from: 2026-09-12 0900 to: 2026-09-12 1000)
+Now you have 1 tasks in the list.
+OhNo!! ERROR :( --> please provide the duration as a positive whole number of hours.
+OhNo!! ERROR :( --> please provide valid search dates in yyyy-MM-dd HHmm format, e.g. 2026-09-12 0900
+OhNo!! ERROR :( --> an event's start must be before its end.
+OhNo!! ERROR :( --> the free-time search start must be before its end.
+Got it. I've added this task:
+[E][ ] vague meeting (from: Mon 2pm to: 4pm)
+Now you have 2 tasks in the list.
+OhNo!! ERROR :( --> event 2 does not use yyyy-MM-dd HHmm dates. Re-add it with dated /from and /to values.
+Noted. I've removed this task:
+  [E][ ] vague meeting (from: Mon 2pm to: 4pm)
+Now you have 1 tasks in the list.
+The earliest 2-hour free slot is:
+  Sep 12 2026 10:00 to Sep 12 2026 12:00
+Here are the tasks in your list:
+1.[E][ ] lecture (from: 2026-09-12 0900 to: 2026-09-12 1000)
+```
