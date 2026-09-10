@@ -115,16 +115,7 @@ public class Bkxss {
             throw new BkxssException("omg! you've entered an empty space at the end of the \"list\" accidentally");
         }
         if (command.equals("find") || command.startsWith("find ")) {
-            String keyword = command.substring(FIND_COMMAND_LENGTH).trim();
-            if (keyword.isBlank()) {
-                throw new BkxssException("please provide a keyword to search for. Use: find KEYWORD");
-            }
-            System.out.println(BOT_PREFIX + "Here are the matching tasks in your list:");
-            ArrayList<Task> matchingTasks = tasks.stream()
-                    .filter(task -> task.matchesKeyword(keyword))
-                    .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-            IntStream.range(0, matchingTasks.size())
-                    .forEach(index -> System.out.println(BOT_PREFIX + (index + 1) + "." + matchingTasks.get(index)));
+            handleFindCommand(command, tasks);
             return false;
         }
         if (command.equals("todo") || command.startsWith("todo ")) {
@@ -178,6 +169,20 @@ public class Bkxss {
             return true;
         }
         throw new BkxssException("I'm sorry, but I don't know what that means :-(");
+    }
+
+    /** Searches the task list and prints tasks matching the supplied keyword. */
+    private static void handleFindCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+        String keyword = command.substring(FIND_COMMAND_LENGTH).trim();
+        if (keyword.isBlank()) {
+            throw new BkxssException("please provide a keyword to search for. Use: find KEYWORD");
+        }
+        System.out.println(BOT_PREFIX + "Here are the matching tasks in your list:");
+        ArrayList<Task> matchingTasks = tasks.stream()
+                .filter(task -> task.matchesKeyword(keyword))
+                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        IntStream.range(0, matchingTasks.size())
+                .forEach(index -> System.out.println(BOT_PREFIX + (index + 1) + "." + matchingTasks.get(index)));
     }
 
     /** Parses a deadline and gives the user a useful error for invalid dates. */
