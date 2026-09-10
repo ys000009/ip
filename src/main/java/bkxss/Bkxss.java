@@ -2,12 +2,15 @@ package bkxss;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
@@ -19,10 +22,13 @@ public class Bkxss {
             .appendPattern("uuuu-MM-dd HHmm")
             .toFormatter()
             .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter OUTPUT_DATE_FORMAT = DateTimeFormatter.ofPattern(
+            "MMM dd yyyy HH:mm", Locale.ENGLISH);
     private static final String BOT_PREFIX = "     ";
     private static final String DIVIDER = "    ____________________________________________________________";
     private static final int LIST_COMMAND_LENGTH = 4;
     private static final int FIND_COMMAND_LENGTH = 4;
+    private static final int FIND_FREE_COMMAND_LENGTH = 8;
     private static final int TODO_COMMAND_LENGTH = 4;
     private static final int DEADLINE_COMMAND_LENGTH = 8;
     private static final int EVENT_COMMAND_LENGTH = 5;
@@ -118,6 +124,10 @@ public class Bkxss {
             handleFindCommand(command, tasks);
             return false;
         }
+        if (command.equals("findfree") || command.startsWith("findfree ")) {
+            handleFindFreeCommand(command, tasks);
+            return false;
+        }
         if (command.equals("todo") || command.startsWith("todo ")) {
             addTask(new Todo(requireDescription(command.substring(TODO_COMMAND_LENGTH), "todo")), tasks);
             return true;
@@ -137,7 +147,9 @@ public class Bkxss {
                 throw new BkxssException("an event needs a description, start, and end time. "
                         + "Use: event DESCRIPTION /from START /to END");
             }
-            addTask(new Event(parts[0], parts[1], parts[2]), tasks);
+            Event event = new Event(parts[0], parts[1], parts[2]);
+            validateEventTimes(event);
+            addTask(event, tasks);
             return true;
         }
         if (command.equals("mark") || command.startsWith("mark ")) {
@@ -183,6 +195,92 @@ public class Bkxss {
                 .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         IntStream.range(0, matchingTasks.size())
                 .forEach(index -> System.out.println(BOT_PREFIX + (index + 1) + "." + matchingTasks.get(index)));
+    }
+
+    /** Finds and prints the earliest free period in the user-supplied search range. */
+    private static void handleFindFreeCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+        String[] parts = command.substring(FIND_FREE_COMMAND_LENGTH).trim().split(" /from | /to ", 3);
+        if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) {
+            throw new BkxssException("a free-time search needs a duration, start, and end. "
+                    + "Use: findfree HOURS /from START /to END");
+        }
+
+        int durationHours = parseDurationHours(parts[0]);
+        LocalDateTime searchStart = parseSearchDateTime(parts[1]);
+        LocalDateTime searchEnd = parseSearchDateTime(parts[2]);
+        if (!searchStart.isBefore(searchEnd)) {
+            throw new BkxssException("the free-time search start must be before its end.");
+        }
+
+        ArrayList<Event> events = getScheduledEvents(tasks);
+        Duration requiredDuration = Duration.ofHours(durationHours);
+        Optional<LocalDateTime> freeStart = FreeTimeFinder.findEarliestStart(
+                searchStart, searchEnd, requiredDuration, events);
+        printFreeTimeResult(durationHours, searchStart, searchEnd, freeStart);
+    }
+
+    /** Returns a positive whole-number duration in hours. */
+    private static int parseDurationHours(String text) throws BkxssException {
+        try {
+            int durationHours = Integer.parseInt(text.trim());
+            if (durationHours <= 0) {
+                throw new NumberFormatException();
+            }
+            return durationHours;
+        } catch (NumberFormatException exception) {
+            throw new BkxssException("please provide the duration as a positive whole number of hours.");
+        }
+    }
+
+    /** Parses a search boundary and gives the user a useful error for invalid dates. */
+    private static LocalDateTime parseSearchDateTime(String text) throws BkxssException {
+        try {
+            return LocalDateTime.parse(text.trim(), INPUT_DATE_FORMAT);
+        } catch (DateTimeParseException exception) {
+            throw new BkxssException("please provide valid search dates in yyyy-MM-dd HHmm format, "
+                    + "e.g. 2026-09-12 0900");
+        }
+    }
+
+    /** Returns scheduled events, rejecting legacy events whose times cannot be placed on a calendar. */
+    private static ArrayList<Event> getScheduledEvents(ArrayList<Task> tasks) throws BkxssException {
+        ArrayList<Event> events = new ArrayList<>();
+        for (int index = 0; index < tasks.size(); index++) {
+            Task task = tasks.get(index);
+            if (task instanceof Event event) {
+                if (!event.hasScheduledTimes()) {
+                    throw new BkxssException("event " + (index + TASK_NUMBER_OFFSET)
+                            + " does not use yyyy-MM-dd HHmm dates. Re-add it with dated /from and /to values.");
+                }
+                events.add(event);
+            }
+        }
+        return events;
+    }
+
+    /** Prints either the earliest free period or a message explaining that none was found. */
+    private static void printFreeTimeResult(int durationHours, LocalDateTime searchStart,
+            LocalDateTime searchEnd, Optional<LocalDateTime> freeStart) {
+        String durationLabel = durationHours + "-hour";
+        if (freeStart.isPresent()) {
+            LocalDateTime freeEnd = freeStart.get().plusHours(durationHours);
+            System.out.println(BOT_PREFIX + "The earliest " + durationLabel + " free slot is:");
+            System.out.println(BOT_PREFIX + "  " + freeStart.get().format(OUTPUT_DATE_FORMAT)
+                    + " to " + freeEnd.format(OUTPUT_DATE_FORMAT));
+        } else {
+            System.out.println(BOT_PREFIX + "I couldn't find a " + durationLabel + " free slot between "
+                    + searchStart.format(OUTPUT_DATE_FORMAT) + " and " + searchEnd.format(OUTPUT_DATE_FORMAT) + ".");
+        }
+    }
+
+    /** Rejects dated events whose end is not later than their start. */
+    private static void validateEventTimes(Event event) throws BkxssException {
+        Optional<LocalDateTime> eventStart = event.getFromDateTime();
+        Optional<LocalDateTime> eventEnd = event.getToDateTime();
+        if (eventStart.isPresent() && eventEnd.isPresent()
+                && !eventStart.get().isBefore(eventEnd.get())) {
+            throw new BkxssException("an event's start must be before its end.");
+        }
     }
 
     /** Parses a deadline and gives the user a useful error for invalid dates. */
