@@ -1,5 +1,7 @@
 package bkxss;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -7,8 +9,7 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.util.stream.IntStream;
 
 /**
  * Starts the Bkxss chatbot and displays its initial greeting.
@@ -119,13 +120,11 @@ public class Bkxss {
                 throw new BkxssException("please provide a keyword to search for. Use: find KEYWORD");
             }
             System.out.println(BOT_PREFIX + "Here are the matching tasks in your list:");
-            int matchNumber = 1;
-            for (Task task : tasks) {
-                if (task.matchesKeyword(keyword)) {
-                    System.out.println(BOT_PREFIX + matchNumber + "." + task);
-                    matchNumber++;
-                }
-            }
+            ArrayList<Task> matchingTasks = tasks.stream()
+                    .filter(task -> task.matchesKeyword(keyword))
+                    .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+            IntStream.range(0, matchingTasks.size())
+                    .forEach(index -> System.out.println(BOT_PREFIX + (index + 1) + "." + matchingTasks.get(index)));
             return false;
         }
         if (command.equals("todo") || command.startsWith("todo ")) {
