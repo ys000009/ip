@@ -53,6 +53,23 @@ Use temporary working directories for manual console verification as well.
 6. Load an older event with `Mon 2pm to 4pm`. Listing/deletion must work;
    `findfree` must ask for dated boundaries. New free-text events must be rejected.
 
+## Automated coverage and manual portability checks: A-MoreTesting
+
+See `test/README.md` for the Java 25 JUnit and coverage commands. JUnit now
+automates console startup, EOF, farewell, and restart persistence in temporary
+directories, in addition to command, model, schedule, and storage tests.
+
+The following manual checks remain for JavaFX presentation. Record the OS,
+display resolution/scaling, language, and outcome when running them; this list
+does not imply that every environment has already been tested.
+
+1. Repeat the GUI checks above on each available OS (macOS, Windows, Linux).
+2. Repeat at 1280 × 720 and 1920 × 1080, including 100% and 200% scaling where
+   available. Confirm readable text, usable controls, wrapping, and scrolling.
+3. Repeat with English and Chinese OS language settings. Add `todo 买书`,
+   search for `买书`, mark it, and restart. Confirm fonts and input methods work
+   and the completed task survives. Dates should keep the documented format.
+
 ## Test case: Create todo task
 
 Aim: Verify that a todo command creates and displays a Todo task.
@@ -567,4 +584,83 @@ Noted. I've removed this task:
   [T][X] keep me
 Now you have 0 tasks in the list.
 Here are the tasks in your list:
+```
+
+## Test case: Find renumbers matches and recovers after deletion errors
+
+Aim: Verify matches use consecutive result numbers and invalid deletion leaves the remaining task order intact.
+
+### Inputs
+
+```text
+todo unrelated
+todo read book
+todo return BOOK
+find book
+find
+mark 3
+delete 2
+delete 3
+find BOOK
+list
+```
+
+### Expected output
+
+```text
+Got it. I've added this task:
+[T][ ] unrelated
+Now you have 1 tasks in the list.
+Got it. I've added this task:
+[T][ ] read book
+Now you have 2 tasks in the list.
+Got it. I've added this task:
+[T][ ] return BOOK
+Now you have 3 tasks in the list.
+Here are the matching tasks in your list:
+1.[T][ ] read book
+2.[T][ ] return BOOK
+OhNo!! ERROR :( --> please provide a keyword to search for. Use: find KEYWORD
+Nice! I've marked this task as done:
+  [T][X] return BOOK
+Noted. I've removed this task:
+  [T][ ] read book
+Now you have 2 tasks in the list.
+OhNo!! ERROR :( --> there is no task numbered 3.
+Here are the matching tasks in your list:
+1.[T][X] return BOOK
+Here are the tasks in your list:
+1.[T][ ] unrelated
+2.[T][X] return BOOK
+```
+
+## Test case: Find free time across midnight after an invalid search
+
+Aim: Verify completed events still occupy time, exact boundary gaps work across midnight, and invalid searches preserve state.
+
+### Inputs
+
+```text
+event 讨论 /from 2028-02-29 2300 /to 2028-03-01 0030
+mark 1
+findfree -1 /from 2028-02-29 2330 /to 2028-03-01 0130
+findfree 1 /from 2028-02-29 2330 /to 2028-03-01 0130
+findfree 2 /from 2028-02-29 2330 /to 2028-03-01 0130
+list
+```
+
+### Expected output
+
+```text
+Got it. I've added this task:
+[E][ ] 讨论 (from: 2028-02-29 2300 to: 2028-03-01 0030)
+Now you have 1 tasks in the list.
+Nice! I've marked this task as done:
+  [E][X] 讨论 (from: 2028-02-29 2300 to: 2028-03-01 0030)
+OhNo!! ERROR :( --> please provide the duration as a positive whole number of hours.
+The earliest 1-hour free slot is:
+  Mar 01 2028 00:30 to Mar 01 2028 01:30
+I couldn't find a 2-hour free slot between Feb 29 2028 23:30 and Mar 01 2028 01:30.
+Here are the tasks in your list:
+1.[E][X] 讨论 (from: 2028-02-29 2300 to: 2028-03-01 0030)
 ```
