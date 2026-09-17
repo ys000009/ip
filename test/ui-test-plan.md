@@ -2,8 +2,33 @@
 
 The `test-ui` skill runs each case in a fresh Bkxss process. Inputs are sent in
 order, followed by `bye`. Expected output includes only the responses to the
-listed inputs, not the greeting or farewell. Persistence tests use the shared
-relative data file and should be run with a clean `data/bkxss.txt` first.
+listed inputs, not the greeting or farewell. Each case uses a temporary working directory so existing task data stays intact.
+
+## GUI checks: A-BetterGui
+
+Run the GUI from a temporary working directory with a fresh data file.
+
+1. At startup, confirm that the command field has focus and Send is disabled.
+   Spaces alone must keep Send disabled; Enter must not create empty messages.
+   The subtitle should read `Your task butler, at your service!`, and the title,
+   controls, focus state, and user messages should use the blue visual theme.
+2. Enter `todo borrow book`, `mark 2`, `mark 1`, `list`, `todo`, then `list`.
+   Commands should be compact and right-aligned; replies should be full-width cards.
+   Each command should show the circular cat avatar on the right. Each Bkxss reply
+   should show the circular dog avatar on the left.
+   Only `mark 2` and `todo` should have a red card headed CHECK YOUR COMMAND.
+   Both lists must contain exactly one completed task.
+3. Add `todo OhNo!! ERROR :( --> investigate`. Its successful reply must use normal styling.
+4. Add a task with a long description and run `list`. Resize the window to its
+   minimum size and then to 900 × 700. Text should wrap without truncation or
+   horizontal scrolling, and the input and Send button should remain usable.
+5. Send enough commands to overflow the conversation. Each new reply should scroll
+   into view; scrolling upward should still let you read earlier replies.
+   The pale-blue `chatbot_background` world map should fill the conversation viewport
+   without tiling, while every message remains easy to read.
+6. Use both Enter and Send. Focus should return to the input after sending.
+7. Enter `bye`. The farewell should remain visible and both input and Send should
+   be disabled. Relaunch and confirm the saved task state is preserved.
 
 ## Test case: Create todo task
 
@@ -358,4 +383,44 @@ The earliest 2-hour free slot is:
   Sep 12 2026 10:00 to Sep 12 2026 12:00
 Here are the tasks in your list:
 1.[E][ ] lecture (from: 2026-09-12 0900 to: 2026-09-12 1000)
+```
+
+
+## Test case: GUI command sequence preserves state after errors
+
+Aim: Verify the GUI smoke-test command sequence also preserves task state in the console, including task descriptions containing error text.
+
+### Inputs
+
+```text
+todo borrow book
+mark 2
+mark 1
+list
+todo
+list
+todo OhNo!! ERROR :( --> investigate
+list
+```
+
+### Expected output
+
+```text
+Got it. I've added this task:
+[T][ ] borrow book
+Now you have 1 tasks in the list.
+OhNo!! ERROR :( --> there is no task numbered 2.
+Nice! I've marked this task as done:
+  [T][X] borrow book
+Here are the tasks in your list:
+1.[T][X] borrow book
+OhNo!! ERROR :( --> The description of a todo cannot be empty.
+Here are the tasks in your list:
+1.[T][X] borrow book
+Got it. I've added this task:
+[T][ ] OhNo!! ERROR :( --> investigate
+Now you have 2 tasks in the list.
+Here are the tasks in your list:
+1.[T][X] borrow book
+2.[T][ ] OhNo!! ERROR :( --> investigate
 ```
