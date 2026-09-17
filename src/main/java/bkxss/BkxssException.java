@@ -1,7 +1,7 @@
 package bkxss;
 
 /**
- * Represents an error caused by an invalid command entered by the user.
+ * Represents a recoverable command or persistence error reported to the user.
  */
 public class BkxssException extends Exception {
     /**

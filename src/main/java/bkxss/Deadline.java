@@ -2,12 +2,15 @@ package bkxss;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
+import java.util.Locale;
 
 /**
  * A task that must be completed by a specified time.
  */
 public class Deadline extends Task {
-    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+    private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter
+            .ofPattern("MMM dd uuuu HH:mm", Locale.ENGLISH).withResolverStyle(ResolverStyle.STRICT);
     private final LocalDateTime by;
 
     /**
