@@ -39,23 +39,38 @@ public class Bkxss {
 
     /** Processes one command for a graphical client and returns the bot's response. */
     public static String processCommand(String command, ArrayList<Task> tasks, Storage storage) {
+        return processCommandResult(command, tasks, storage).message();
+    }
+
+    /**
+     * Processes a GUI command and reports whether it failed validation.
+     * Keeping the error flag separate from the text prevents task descriptions from triggering error styling.
+     *
+     * @param command command supplied by the user
+     * @param tasks current task list
+     * @param storage destination for task changes
+     * @return response text and its validation status
+     */
+    public static CommandResult processCommandResult(String command, ArrayList<Task> tasks, Storage storage) {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PrintStream originalOutput = System.out;
+        boolean isError = false;
         try {
             System.setOut(new PrintStream(output));
             if (command.equals("bye")) {
-                return "Bye. Hope to see you again soon!";
+                return new CommandResult("Bye. Hope to see you again soon!", false);
             }
             boolean changed = handleCommand(command, tasks);
             if (changed) {
                 storage.save(tasks);
             }
         } catch (BkxssException exception) {
+            isError = true;
             System.out.println(BOT_PREFIX + "OhNo!! ERROR :( --> " + exception.getMessage());
         } finally {
             System.setOut(originalOutput);
         }
-        return output.toString().strip().replace(BOT_PREFIX, "");
+        return new CommandResult(output.toString().strip().replace(BOT_PREFIX, ""), isError);
     }
 
     /**
