@@ -27,8 +27,9 @@ Run the GUI from a temporary working directory with a fresh data file.
    The pale-blue `chatbot_background` world map should fill the conversation viewport
    without tiling, while every message remains easy to read.
 6. Use both Enter and Send. Focus should return to the input after sending.
-7. Enter `bye`. The farewell should remain visible and both input and Send should
-   be disabled. Relaunch and confirm the saved task state is preserved.
+7. Paste `bye` with Unicode spacing around it, such as no-break spaces. The farewell
+   should remain visible and both input and Send should be disabled. Relaunch and
+   confirm the saved task state is preserved.
 
 ## Storage checks: A-MoreErrorHandling
 
@@ -170,6 +171,23 @@ blah
 OhNo!! ERROR :( --> The description of a todo cannot be empty.
 Here are the tasks in your list:
 OhNo!! ERROR :( --> I'm sorry, but I don't know what that means :-(
+```
+
+## Test case: Exit with Unicode whitespace
+
+Aim: Verify that Unicode spacing around bye is accepted and later commands are not processed.
+
+### Inputs
+
+```text
+ bye 
+todo should not run
+```
+
+### Expected output
+
+```text
+
 ```
 
 ## Test case: Find tasks by description keyword

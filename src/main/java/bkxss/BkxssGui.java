@@ -99,9 +99,10 @@ public class BkxssGui extends Application {
             return;
         }
         addUserMessage(command);
-        addBotMessage(Bkxss.processCommandResult(command, tasks, storage));
+        CommandResult result = Bkxss.processCommandResult(command, tasks, storage);
+        addBotMessage(result);
         commandInput.clear();
-        if (command.equals("bye")) {
+        if (!result.isError() && Bkxss.isExitCommand(command)) {
             commandInput.setDisable(true);
             commandInput.setPromptText("Session finished. Close the window to exit.");
         } else {

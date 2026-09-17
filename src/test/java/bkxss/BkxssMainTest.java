@@ -35,6 +35,15 @@ class BkxssMainTest {
     }
 
     @Test
+    void main_byeWithUnicodeWhitespace_stopsBeforeLaterCommands() throws Exception {
+        String output = runSession("\u2003bye\u00a0\ntodo should not run\n");
+
+        assertTrue(output.contains("Bye. Hope to see you again soon!"));
+        assertFalse(output.contains("should not run"));
+        assertFalse(Files.exists(temporaryDirectory.resolve("data/bkxss.txt")));
+    }
+
+    @Test
     void main_endOfInput_exitsWithoutRequiringBye() throws Exception {
         String output = runSession("bye extra\ntodo keep me\nlist\n");
 

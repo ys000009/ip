@@ -123,7 +123,7 @@ public class Bkxss {
                 CommandResult result = processCommandResult(command, tasks, storage);
                 result.message().lines().forEach(line -> System.out.println(BOT_PREFIX + line));
                 System.out.println(DIVIDER);
-                if (!result.isError() && command.strip().equals("bye")) {
+                if (!result.isError() && isExitCommand(command)) {
                     return;
                 }
             }
@@ -139,6 +139,15 @@ public class Bkxss {
             throw new BkxssException("commands cannot contain line breaks or control characters.");
         }
         return command.replaceAll("[\\p{Zs}\\t]+", " ").strip();
+    }
+
+    /** Returns whether the input is the exit command after applying standard command normalization. */
+    static boolean isExitCommand(String command) {
+        try {
+            return normalizeCommand(command).equals("bye");
+        } catch (BkxssException exception) {
+            return false;
+        }
     }
 
     /**
