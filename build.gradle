@@ -41,8 +41,27 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    javaFxLinuxRuntime
+    javaFxMacRuntime
+    javaFxWindowsRuntime
+}
+
 dependencies {
     String jUnitVersion = '5.14.4'
+    String javaFxVersion = '25.0.1'
+
+    ['base', 'graphics', 'controls'].each { module ->
+        javaFxLinuxRuntime("org.openjfx:javafx-${module}:${javaFxVersion}:linux") {
+            transitive = false
+        }
+        javaFxMacRuntime("org.openjfx:javafx-${module}:${javaFxVersion}:mac") {
+            transitive = false
+        }
+        javaFxWindowsRuntime("org.openjfx:javafx-${module}:${javaFxVersion}:win") {
+            transitive = false
+        }
+    }
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
 
@@ -78,6 +97,9 @@ jar {
 
 shadowJar {
     archiveFileName = 'bkxss.jar'
+    configurations = [project.configurations.javaFxLinuxRuntime,
+            project.configurations.javaFxMacRuntime,
+            project.configurations.javaFxWindowsRuntime]
 }
 
 run {

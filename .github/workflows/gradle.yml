@@ -22,5 +22,15 @@ jobs:
           java-version: '25'
           java-package: jdk+fx
 
-      - name: Build and check with Gradle
-        run: ./gradlew check
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Build, check, and package with Gradle
+        run: ./gradlew check shadowJar
+
+      - name: Run console UI tests
+        run: python .codex/skills/test-ui/scripts/run_ui_tests.py
+        env:
+          PYTHONIOENCODING: utf-8

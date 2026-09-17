@@ -41,7 +41,15 @@ sdk use java 25.0.3.fx-zulu
 ./gradlew shadowJar
 ```
 
-The JAR is created at `build/libs/bkxss.jar`. It includes the `bkxss.Bkxss` main class, so it can be run directly:
+On Windows PowerShell, use:
+
+```powershell
+.\gradlew.bat shadowJar
+```
+
+The JAR is created at `build/libs/bkxss.jar`. It includes JavaFX runtime files
+for x86-64 Windows, macOS, and Linux, so the same JAR can be run on those
+platforms with Java 25:
 
 ```sh
 java -jar build/libs/bkxss.jar

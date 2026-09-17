@@ -15,6 +15,12 @@ ROOT = Path(__file__).resolve().parents[4]
 PLAN_PATH = ROOT / "test" / "ui-test-plan.md"
 CASE_PATTERN = re.compile(r"^## Test case: (.+)$", re.MULTILINE)
 BLOCK_PATTERN = re.compile(r"^### (Inputs|Expected output)\s*```text\n(.*?)\n```$", re.MULTILINE | re.DOTALL)
+JAVA_UTF8_OPTIONS = [
+    "-Dfile.encoding=UTF-8",
+    "-Dstdin.encoding=UTF-8",
+    "-Dstdout.encoding=UTF-8",
+    "-Dstderr.encoding=UTF-8",
+]
 
 
 def parse_cases(plan: str) -> list[tuple[str, str, str, str]]:
@@ -51,7 +57,7 @@ def response_only(output: str) -> str:
 def main() -> int:
     """Compile the application and run every documented UI test case."""
     try:
-        cases = parse_cases(PLAN_PATH.read_text())
+        cases = parse_cases(PLAN_PATH.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         print(f"Test plan error: {error}", file=sys.stderr)
         return 2
@@ -60,7 +66,7 @@ def main() -> int:
     try:
         compile_result = subprocess.run(
             ["javac", "-d", str(build_dir), *map(str, (ROOT / "src/main/java").rglob("*.java"))],
-            cwd=ROOT, text=True, capture_output=True, check=False,
+            cwd=ROOT, text=True, encoding="utf-8", capture_output=True, check=False,
         )
         if compile_result.returncode:
             print("Compilation failed:\n" + compile_result.stderr, file=sys.stderr)
@@ -71,8 +77,8 @@ def main() -> int:
             session_dir = Path(tempfile.mkdtemp(prefix="bkxss-ui-session-"))
             try:
                 result = subprocess.run(
-                    ["java", "-cp", str(build_dir), "bkxss.Bkxss"], cwd=session_dir,
-                    input=session_input, text=True, capture_output=True, check=False,
+                    ["java", *JAVA_UTF8_OPTIONS, "-cp", str(build_dir), "bkxss.Bkxss"], cwd=session_dir,
+                    input=session_input, text=True, encoding="utf-8", capture_output=True, check=False,
                 )
             finally:
                 shutil.rmtree(session_dir)

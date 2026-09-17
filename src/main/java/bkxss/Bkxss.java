@@ -115,7 +115,7 @@ public class Bkxss {
         System.out.println(BOT_PREFIX + "What can I do for you?");
         System.out.println(DIVIDER);
 
-        try (Scanner scanner = new Scanner(System.in)) {
+        try (Scanner scanner = new Scanner(System.in, System.getProperty("stdin.encoding"))) {
             while (scanner.hasNextLine()) {
                 String command = scanner.nextLine();
 

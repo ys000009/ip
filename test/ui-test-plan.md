@@ -56,7 +56,8 @@ Use temporary working directories for manual console verification as well.
 
 ## Automated coverage and manual portability checks: A-MoreTesting
 
-See `test/README.md` for the Java 25 JUnit and coverage commands. JUnit now
+See `test/README.md` for the Java 25 JUnit and coverage commands. CI runs JUnit,
+fat-JAR packaging, and this console plan on Windows, macOS, and Linux. JUnit
 automates console startup, EOF, farewell, and restart persistence in temporary
 directories, in addition to command, model, schedule, and storage tests.
 

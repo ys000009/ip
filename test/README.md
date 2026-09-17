@@ -8,6 +8,10 @@ sdk use java 25.0.3.fx-zulu
 python3 .codex/skills/test-ui/scripts/run_ui_tests.py
 ```
 
+On Windows PowerShell, use `python` instead of `python3` for the UI test command.
+The runner uses UTF-8 explicitly for its test plan and child-process streams so
+Unicode commands and responses are checked consistently on every OS.
+
 `check` runs JUnit and Checkstyle. Every Gradle `test` run also generates a
 JaCoCo HTML report at `build/reports/jacoco/test/html/index.html` and an XML
 report at `build/reports/jacoco/test/jacocoTestReport.xml`. The JUnit report is
@@ -90,12 +94,13 @@ This verifies JVM locale behavior, not GUI rendering or OS input methods.
 
 Local verification on macOS with Java 25.0.3.fx-zulu:
 
-- 83 JUnit tests pass, with no failures or skips, under both the default
+- 84 JUnit tests pass, with no failures or skips, under both the default
   English JVM locale and the Chinese JVM locale.
-- All 19 console UI cases and both Checkstyle tasks pass.
-- Core coverage: 382/384 lines (99.48%), 229/234 branches (97.86%), and
-  65/66 methods (98.48%), with the exclusions described above.
+- All 20 console UI cases and both Checkstyle tasks pass.
+- Core coverage: 383/387 lines (98.97%), 229/234 branches (97.86%), and
+  66/67 methods (98.51%), with the exclusions described above.
 - The exact-fit mutation is caught by seven scheduling JUnit tests and the
   console plan. The production source is restored and the suites pass again.
-- Windows/Linux execution and the manual GUI environment matrix have not
-  been performed locally for this increment.
+- The CI workflow runs Gradle checks, fat-JAR packaging, and the console UI
+  plan on Windows, macOS, and Linux. The manual GUI environment matrix has not
+  been completed locally for this increment.

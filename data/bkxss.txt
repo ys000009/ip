@@ -3,3 +3,4 @@ T | 0 | read story
 T | 1 | play games
 E | 0 | lecture | 2026-09-12 0900 to 2026-09-12 1000
 E | 0 | workshop | 2026-09-12 1200 to 2026-09-12 1500
+T | 0 | t

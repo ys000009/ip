@@ -102,12 +102,15 @@ class BkxssMainTest {
         Path java = Path.of(System.getProperty("java.home"), "bin", executable);
         Path classes = Path.of(Bkxss.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         ArrayList<String> command = new ArrayList<>(List.of(java.toString()));
+        String utf8 = StandardCharsets.UTF_8.name();
         // Include console entry-point execution in the same report when Gradle enables JaCoCo.
         ManagementFactory.getRuntimeMXBean().getInputArguments().stream()
                 .filter(argument -> argument.startsWith("-javaagent:") && argument.contains("jacoco"))
                 .map(BkxssMainTest::withAbsoluteCoveragePath)
                 .forEach(command::add);
-        command.addAll(List.of("-Dfile.encoding=UTF-8", "-cp", classes.toString(), "bkxss.Bkxss"));
+        command.addAll(List.of("-Dfile.encoding=" + utf8, "-Dstdin.encoding=" + utf8,
+                "-Dstdout.encoding=" + utf8, "-Dstderr.encoding=" + utf8,
+                "-cp", classes.toString(), "bkxss.Bkxss"));
         Path outputFile = Files.createTempFile(temporaryDirectory, "console-", ".txt");
         Process process = new ProcessBuilder(command).directory(temporaryDirectory.toFile())
                 .redirectErrorStream(true).redirectOutput(outputFile.toFile()).start();
@@ -116,7 +119,7 @@ class BkxssMainTest {
                 inputStream.write(input.getBytes(StandardCharsets.UTF_8));
             }
             assertTrue(process.waitFor(20, TimeUnit.SECONDS), "Console session did not exit");
-            String output = Files.readString(outputFile).replace("\r\n", "\n");
+            String output = Files.readString(outputFile, StandardCharsets.UTF_8).replace("\r\n", "\n");
             assertEquals(0, process.exitValue(), output);
             return output;
         } finally {
@@ -134,6 +137,7 @@ class BkxssMainTest {
 
     /** Normalizes only platform line endings, retaining the exact persisted records. */
     private String readSavedTasks() throws Exception {
-        return Files.readString(temporaryDirectory.resolve("data/bkxss.txt")).replace("\r\n", "\n");
+        return Files.readString(temporaryDirectory.resolve("data/bkxss.txt"), StandardCharsets.UTF_8)
+                .replace("\r\n", "\n");
     }
 }
