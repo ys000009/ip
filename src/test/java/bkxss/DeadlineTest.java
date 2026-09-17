@@ -4,11 +4,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
 /** Tests deadline formatting and persistence parsing. */
 class DeadlineTest {
+    @Test
+    void deadline_parseFormattedBy_impossibleDate_rejectsInsteadOfAdjusting() {
+        assertThrows(DateTimeParseException.class, () -> Deadline.parseFormattedBy("Feb 30 2026 18:00"));
+        assertThrows(DateTimeParseException.class, () -> Deadline.parseFormattedBy("Feb 29 2026 18:00"));
+        assertEquals(LocalDateTime.of(2028, 2, 29, 18, 0), Deadline.parseFormattedBy("Feb 29 2028 18:00"));
+    }
+
+    @Test
+    void deadline_nonEnglishLocale_keepsStorageFormatPortable() {
+        Locale originalLocale = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.FRENCH);
+            Deadline deadline = new Deadline("return book", LocalDateTime.of(2026, 12, 2, 18, 0));
+            assertEquals("Dec 02 2026 18:00", deadline.getFormattedBy());
+            assertEquals(deadline.getBy(), Deadline.parseFormattedBy(deadline.getFormattedBy()));
+        } finally {
+            Locale.setDefault(originalLocale);
+        }
+    }
+
     @Test
     void deadline_getFormattedBy_formatsDateForDisplay() {
         Deadline deadline = new Deadline("return book", LocalDateTime.of(2019, 12, 2, 18, 0));

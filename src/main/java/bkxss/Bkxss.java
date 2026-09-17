@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -26,7 +29,7 @@ public class Bkxss {
             "MMM dd yyyy HH:mm", Locale.ENGLISH);
     private static final String BOT_PREFIX = "     ";
     private static final String DIVIDER = "    ____________________________________________________________";
-    private static final int LIST_COMMAND_LENGTH = 4;
+    private static final Pattern PARAMETER_PATTERN = Pattern.compile("(?<!\\S)/(\\S+)");
     private static final int FIND_COMMAND_LENGTH = 4;
     private static final int FIND_FREE_COMMAND_LENGTH = 8;
     private static final int TODO_COMMAND_LENGTH = 4;
@@ -54,9 +57,13 @@ public class Bkxss {
     public static CommandResult processCommandResult(String command, ArrayList<Task> tasks, Storage storage) {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PrintStream originalOutput = System.out;
+        ArrayList<Task> originalTasks = new ArrayList<>(tasks);
+        ArrayList<Boolean> originalStatuses = tasks.stream().map(Task::isDone)
+                .collect(Collectors.toCollection(ArrayList::new));
         boolean isError = false;
-        try {
-            System.setOut(new PrintStream(output));
+        try (PrintStream capturedOutput = new PrintStream(output)) {
+            System.setOut(capturedOutput);
+            command = normalizeCommand(command);
             if (command.equals("bye")) {
                 return new CommandResult("Bye. Hope to see you again soon!", false);
             }
@@ -66,11 +73,25 @@ public class Bkxss {
             }
         } catch (BkxssException exception) {
             isError = true;
-            System.out.println(BOT_PREFIX + "OhNo!! ERROR :( --> " + exception.getMessage());
+            tasks.clear();
+            tasks.addAll(originalTasks);
+            for (int index = 0; index < tasks.size(); index++) {
+                if (originalStatuses.get(index)) {
+                    tasks.get(index).markAsDone();
+                } else {
+                    tasks.get(index).markAsNotDone();
+                }
+            }
+            // Discard success messages when validation or persistence fails.
+            output.reset();
+            return new CommandResult("OhNo!! ERROR :( --> " + exception.getMessage(), isError);
         } finally {
             System.setOut(originalOutput);
         }
-        return new CommandResult(output.toString().strip().replace(BOT_PREFIX, ""), isError);
+        String response = output.toString().lines()
+                .map(line -> line.startsWith(BOT_PREFIX) ? line.substring(BOT_PREFIX.length()) : line)
+                .collect(Collectors.joining("\n"));
+        return new CommandResult(response, isError);
     }
 
     /**
@@ -99,22 +120,25 @@ public class Bkxss {
                 String command = scanner.nextLine();
 
                 System.out.println(DIVIDER);
-                if (command.equals("bye")) {
-                    System.out.println(BOT_PREFIX + "Bye. Hope to see you again soon!");
-                    System.out.println(DIVIDER);
+                CommandResult result = processCommandResult(command, tasks, storage);
+                result.message().lines().forEach(line -> System.out.println(BOT_PREFIX + line));
+                System.out.println(DIVIDER);
+                if (!result.isError() && command.strip().equals("bye")) {
                     return;
                 }
-                try {
-                    boolean changed = handleCommand(command, tasks);
-                    if (changed) {
-                        storage.save(tasks);
-                    }
-                } catch (BkxssException exception) {
-                    System.out.println(BOT_PREFIX + "OhNo!! ERROR :( --> " + exception.getMessage());
-                }
-                System.out.println(DIVIDER);
             }
         }
+    }
+
+    /** Normalizes harmless spacing while rejecting control characters and empty input. */
+    private static String normalizeCommand(String command) throws BkxssException {
+        if (command == null || command.isBlank()) {
+            throw new BkxssException("please enter a command, e.g. list or todo DESCRIPTION.");
+        }
+        if (command.chars().anyMatch(character -> Character.isISOControl(character) && character != '\t')) {
+            throw new BkxssException("commands cannot contain line breaks or control characters.");
+        }
+        return command.replaceAll("[\\p{Zs}\\t]+", " ").strip();
     }
 
     /**
@@ -132,8 +156,8 @@ public class Bkxss {
             }
             return false;
         }
-        if (command.startsWith("list") && command.substring(LIST_COMMAND_LENGTH).isBlank()) {
-            throw new BkxssException("omg! you've entered an empty space at the end of the \"list\" accidentally");
+        if (command.startsWith("list ") || command.startsWith("bye ")) {
+            throw new BkxssException("list and bye do not accept extra arguments.");
         }
         if (command.equals("find") || command.startsWith("find ")) {
             handleFindCommand(command, tasks);
@@ -148,20 +172,14 @@ public class Bkxss {
             return true;
         }
         if (command.equals("deadline") || command.startsWith("deadline ")) {
-            String[] parts = command.substring(DEADLINE_COMMAND_LENGTH).trim().split(" /by ", 2);
-            if (parts.length != 2 || parts[0].isBlank() || parts[1].isBlank()) {
-                throw new BkxssException("a deadline needs a description and a due date. "
-                        + "Use: deadline DESCRIPTION /by DATE");
-            }
+            String[] parts = parseParameters(command.substring(DEADLINE_COMMAND_LENGTH),
+                    "deadline DESCRIPTION /by DATE", "by");
             addTask(new Deadline(parts[0], parseDeadline(parts[1])), tasks);
             return true;
         }
         if (command.equals("event") || command.startsWith("event ")) {
-            String[] parts = command.substring(EVENT_COMMAND_LENGTH).trim().split(" /from | /to ", 3);
-            if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) {
-                throw new BkxssException("an event needs a description, start, and end time. "
-                        + "Use: event DESCRIPTION /from START /to END");
-            }
+            String[] parts = parseParameters(command.substring(EVENT_COMMAND_LENGTH),
+                    "event DESCRIPTION /from START /to END", "from", "to");
             Event event = new Event(parts[0], parts[1], parts[2]);
             validateEventTimes(event);
             addTask(event, tasks);
@@ -198,6 +216,33 @@ public class Bkxss {
         throw new BkxssException("I'm sorry, but I don't know what that means :-(");
     }
 
+    /** Requires every named parameter exactly once, in order, with a nonempty value. */
+    private static String[] parseParameters(String arguments, String usage, String... names) throws BkxssException {
+        Matcher matcher = PARAMETER_PATTERN.matcher(arguments);
+        String[] parts = new String[names.length + 1];
+        int parameterIndex = 0;
+        int valueStart = 0;
+        String error = "invalid or repeated parameters. Use: " + usage;
+        while (matcher.find()) {
+            if (parameterIndex >= names.length || !matcher.group(1).equals(names[parameterIndex])) {
+                throw new BkxssException(error);
+            }
+            parts[parameterIndex] = arguments.substring(valueStart, matcher.start()).strip();
+            valueStart = matcher.end();
+            parameterIndex++;
+        }
+        if (parameterIndex != names.length) {
+            throw new BkxssException(error);
+        }
+        parts[parameterIndex] = arguments.substring(valueStart).strip();
+        for (String part : parts) {
+            if (part.isEmpty()) {
+                throw new BkxssException(error);
+            }
+        }
+        return parts;
+    }
+
     /** Searches the task list and prints tasks matching the supplied keyword. */
     private static void handleFindCommand(String command, ArrayList<Task> tasks) throws BkxssException {
         String keyword = command.substring(FIND_COMMAND_LENGTH).trim();
@@ -214,11 +259,8 @@ public class Bkxss {
 
     /** Finds and prints the earliest free period in the user-supplied search range. */
     private static void handleFindFreeCommand(String command, ArrayList<Task> tasks) throws BkxssException {
-        String[] parts = command.substring(FIND_FREE_COMMAND_LENGTH).trim().split(" /from | /to ", 3);
-        if (parts.length != 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) {
-            throw new BkxssException("a free-time search needs a duration, start, and end. "
-                    + "Use: findfree HOURS /from START /to END");
-        }
+        String[] parts = parseParameters(command.substring(FIND_FREE_COMMAND_LENGTH),
+                "findfree HOURS /from START /to END", "from", "to");
 
         int durationHours = parseDurationHours(parts[0]);
         LocalDateTime searchStart = parseSearchDateTime(parts[1]);
@@ -237,6 +279,9 @@ public class Bkxss {
     /** Returns a positive whole-number duration in hours. */
     private static int parseDurationHours(String text) throws BkxssException {
         try {
+            if (!text.matches("[0-9]+")) {
+                throw new NumberFormatException();
+            }
             int durationHours = Integer.parseInt(text.trim());
             if (durationHours <= 0) {
                 throw new NumberFormatException();
@@ -288,12 +333,15 @@ public class Bkxss {
         }
     }
 
-    /** Rejects dated events whose end is not later than their start. */
+    /** Requires valid calendar dates and a positive duration for newly entered events. */
     private static void validateEventTimes(Event event) throws BkxssException {
         Optional<LocalDateTime> eventStart = event.getFromDateTime();
         Optional<LocalDateTime> eventEnd = event.getToDateTime();
-        if (eventStart.isPresent() && eventEnd.isPresent()
-                && !eventStart.get().isBefore(eventEnd.get())) {
+        if (eventStart.isEmpty() || eventEnd.isEmpty()) {
+            throw new BkxssException("please provide valid event dates in yyyy-MM-dd HHmm format, "
+                    + "e.g. 2026-09-12 0900");
+        }
+        if (!eventStart.get().isBefore(eventEnd.get())) {
             throw new BkxssException("an event's start must be before its end.");
         }
     }
@@ -308,7 +356,11 @@ public class Bkxss {
     }
 
     /** Adds a task to the list and prints a confirmation. */
-    private static void addTask(Task task, ArrayList<Task> tasks) {
+    private static void addTask(Task task, ArrayList<Task> tasks) throws BkxssException {
+        Task.validateDescription(task.description);
+        if (tasks.stream().anyMatch(existing -> existing.hasSameDetails(task))) {
+            throw new BkxssException("this task already exists in your list.");
+        }
         tasks.add(task);
         assert tasks.contains(task) : "Added task must be present in the task list";
         System.out.println(BOT_PREFIX + "Got it. I've added this task:");
@@ -327,6 +379,9 @@ public class Bkxss {
     /** Returns the requested task after validating that its number is in the task list. */
     private static Task getTask(String numberText, ArrayList<Task> tasks) throws BkxssException {
         try {
+            if (!numberText.trim().matches("-?[0-9]+")) {
+                throw new NumberFormatException();
+            }
             int taskNumber = Integer.parseInt(numberText.trim());
             if (taskNumber < TASK_NUMBER_OFFSET || taskNumber > tasks.size()) {
                 throw new BkxssException("there is no task numbered " + taskNumber + ".");
