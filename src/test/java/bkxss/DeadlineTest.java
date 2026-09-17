@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,20 @@ class DeadlineTest {
 
     @Test
     void deadline_parseFormattedBy_invalidText_throwsException() {
-        assertThrows(Exception.class, () -> Deadline.parseFormattedBy("not a date"));
+        for (String text : List.of("not a date", "Apr 31 2026 18:00", "Dec 02 2026 24:00",
+                "Dec 02 2026 18:60", "2026-12-02 1800", "Dec 02 2026 18:00 extra")) {
+            assertThrows(DateTimeParseException.class, () -> Deadline.parseFormattedBy(text), text);
+        }
+    }
+
+    @Test
+    void deadline_completedLeapDayTask_preservesDateAndFormatsStatus() {
+        LocalDateTime by = LocalDateTime.of(2028, 2, 29, 0, 5);
+        Deadline deadline = new Deadline("return book", by);
+        deadline.markAsDone();
+
+        assertEquals(by, deadline.getBy());
+        assertEquals(by, Deadline.parseFormattedBy("  Feb 29 2028 00:05  "));
+        assertEquals("[D][X] return book (by: Feb 29 2028 00:05)", deadline.toString());
     }
 }
