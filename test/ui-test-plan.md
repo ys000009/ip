@@ -10,10 +10,11 @@ Run the GUI from a temporary working directory with a fresh data file.
 
 1. At startup, confirm that the command field has focus and Send is disabled.
    Spaces alone must keep Send disabled; Enter must not create empty messages.
-   The subtitle should read `Your task butler, at your service!`, and the title,
+   The subtitle should read `Your task housekeeper, at your service!`, and the title,
    controls, focus state, and user messages should use the blue visual theme.
 2. Enter `todo borrow book`, `mark 2`, `mark 1`, `list`, `todo`, then `list`.
-   Commands should be compact and right-aligned; replies should be full-width cards.
+   Commands should be compact and right-aligned; reply cards should fit their text
+   rather than stretching across the row.
    Each command should show the circular cat avatar on the right. Each Bkxss reply
    should show the circular dog avatar on the left.
    Only `mark 2` and `todo` should have a red card headed CHECK YOUR COMMAND.

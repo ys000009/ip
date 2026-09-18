@@ -48,7 +48,7 @@ public class BkxssGui extends Application {
 
         Label title = new Label("Bkxss");
         title.getStyleClass().add("app-title");
-        Label subtitle = new Label("Your task butler, at your service!");
+        Label subtitle = new Label("Your task housekeeper, at your service!");
         subtitle.getStyleClass().add("muted-text");
         VBox header = new VBox(3, title, subtitle);
         header.getStyleClass().add("header");
@@ -127,7 +127,7 @@ public class BkxssGui extends Application {
         conversation.getChildren().add(row);
     }
 
-    /** Adds a full-width response card; errors have both a text heading and a distinct color. */
+    /** Adds a compact response card; errors have both a text heading and a distinct color. */
     private void addBotMessage(CommandResult result) {
         Label heading = new Label(result.isError() ? "CHECK YOUR COMMAND" : "BKXSS");
         heading.getStyleClass().add("message-heading");
@@ -135,14 +135,13 @@ public class BkxssGui extends Application {
         message.setMaxWidth(Double.MAX_VALUE);
         VBox card = new VBox(6, heading, message);
         card.getStyleClass().add("bot-message");
-        card.setMaxWidth(Double.MAX_VALUE);
+        card.maxWidthProperty().bind(conversation.widthProperty().subtract(88).multiply(0.85));
         if (result.isError()) {
             card.getStyleClass().add("error-message");
         }
         ImageView avatar = createAvatar(botAvatar, "Bkxss avatar: dog");
         HBox row = new HBox(10, avatar, card);
         row.setAlignment(Pos.TOP_LEFT);
-        HBox.setHgrow(card, Priority.ALWAYS);
         conversation.getChildren().add(row);
     }
 
