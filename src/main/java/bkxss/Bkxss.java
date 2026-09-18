@@ -158,71 +158,91 @@ public class Bkxss {
      * @throws BkxssException if the command is invalid
      */
     private static boolean handleCommand(String command, ArrayList<Task> tasks) throws BkxssException {
-        if (command.equals("list")) {
-            System.out.println(BOT_PREFIX + "Here are the tasks in your list:");
-            for (int i = 0; i < tasks.size(); i++) {
-                System.out.println(BOT_PREFIX + (i + 1) + "." + tasks.get(i));
-            }
-            return false;
-        }
-        if (command.startsWith("list ") || command.startsWith("bye ")) {
+        String commandWord = command.split(" ", 2)[0];
+        return switch (commandWord) {
+        case "list" -> handleListCommand(command, tasks);
+        case "find" -> handleFindCommand(command, tasks);
+        case "findfree" -> handleFindFreeCommand(command, tasks);
+        case "todo" -> handleTodoCommand(command, tasks);
+        case "deadline" -> handleDeadlineCommand(command, tasks);
+        case "event" -> handleEventCommand(command, tasks);
+        case "mark" -> handleMarkCommand(command, tasks);
+        case "unmark" -> handleUnmarkCommand(command, tasks);
+        case "delete" -> handleDeleteCommand(command, tasks);
+        case "bye" -> throw new BkxssException("list and bye do not accept extra arguments.");
+        default -> throw new BkxssException("I'm sorry, but I don't know what that means :-(");
+        };
+    }
+
+    /** Lists every task after rejecting arguments that the list command does not accept. */
+    private static boolean handleListCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+        if (!command.equals("list")) {
             throw new BkxssException("list and bye do not accept extra arguments.");
         }
-        if (command.equals("find") || command.startsWith("find ")) {
-            handleFindCommand(command, tasks);
-            return false;
+        System.out.println(BOT_PREFIX + "Here are the tasks in your list:");
+        for (int index = 0; index < tasks.size(); index++) {
+            System.out.println(BOT_PREFIX + (index + TASK_NUMBER_OFFSET) + "." + tasks.get(index));
         }
-        if (command.equals("findfree") || command.startsWith("findfree ")) {
-            handleFindFreeCommand(command, tasks);
-            return false;
+        return false;
+    }
+
+    /** Adds a todo from the description following the command word. */
+    private static boolean handleTodoCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+        String description = requireDescription(command.substring(TODO_COMMAND_LENGTH), "todo");
+        addTask(new Todo(description), tasks);
+        return true;
+    }
+
+    /** Adds a deadline after parsing its description and due date. */
+    private static boolean handleDeadlineCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+        String[] parts = parseParameters(command.substring(DEADLINE_COMMAND_LENGTH),
+                "deadline DESCRIPTION /by DATE", "by");
+        addTask(new Deadline(parts[0], parseDeadline(parts[1])), tasks);
+        return true;
+    }
+
+    /** Adds an event after validating its description and time range. */
+    private static boolean handleEventCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+        String[] parts = parseParameters(command.substring(EVENT_COMMAND_LENGTH),
+                "event DESCRIPTION /from START /to END", "from", "to");
+        Event event = new Event(parts[0], parts[1], parts[2]);
+        validateEventTimes(event);
+        addTask(event, tasks);
+        return true;
+    }
+
+    /** Marks one incomplete task as completed. */
+    private static boolean handleMarkCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+        Task task = getTask(command.substring(MARK_COMMAND_LENGTH), tasks);
+        if (task.isDone()) {
+            throw new BkxssException("this task is already marked as done!");
         }
-        if (command.equals("todo") || command.startsWith("todo ")) {
-            addTask(new Todo(requireDescription(command.substring(TODO_COMMAND_LENGTH), "todo")), tasks);
-            return true;
+        task.markAsDone();
+        System.out.println(BOT_PREFIX + "Nice! I've marked this task as done:");
+        System.out.println(BOT_PREFIX + "  " + task);
+        return true;
+    }
+
+    /** Marks one completed task as incomplete. */
+    private static boolean handleUnmarkCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+        Task task = getTask(command.substring(UNMARK_COMMAND_LENGTH), tasks);
+        if (!task.isDone()) {
+            throw new BkxssException("this task is already unmarked!");
         }
-        if (command.equals("deadline") || command.startsWith("deadline ")) {
-            String[] parts = parseParameters(command.substring(DEADLINE_COMMAND_LENGTH),
-                    "deadline DESCRIPTION /by DATE", "by");
-            addTask(new Deadline(parts[0], parseDeadline(parts[1])), tasks);
-            return true;
-        }
-        if (command.equals("event") || command.startsWith("event ")) {
-            String[] parts = parseParameters(command.substring(EVENT_COMMAND_LENGTH),
-                    "event DESCRIPTION /from START /to END", "from", "to");
-            Event event = new Event(parts[0], parts[1], parts[2]);
-            validateEventTimes(event);
-            addTask(event, tasks);
-            return true;
-        }
-        if (command.equals("mark") || command.startsWith("mark ")) {
-            Task task = getTask(command.substring(MARK_COMMAND_LENGTH), tasks);
-            if (task.isDone()) {
-                throw new BkxssException("this task is already marked as done!");
-            }
-            task.markAsDone();
-            System.out.println(BOT_PREFIX + "Nice! I've marked this task as done:");
-            System.out.println(BOT_PREFIX + "  " + task);
-            return true;
-        }
-        if (command.equals("unmark") || command.startsWith("unmark ")) {
-            Task task = getTask(command.substring(UNMARK_COMMAND_LENGTH), tasks);
-            if (!task.isDone()) {
-                throw new BkxssException("this task is already unmarked!");
-            }
-            task.markAsNotDone();
-            System.out.println(BOT_PREFIX + "OK, I've marked this task as not done yet:");
-            System.out.println(BOT_PREFIX + "  " + task);
-            return true;
-        }
-        if (command.equals("delete") || command.startsWith("delete ")) {
-            Task task = getTask(command.substring(DELETE_COMMAND_LENGTH), tasks);
-            tasks.remove(task);
-            System.out.println(BOT_PREFIX + "Noted. I've removed this task:");
-            System.out.println(BOT_PREFIX + "  " + task);
-            System.out.println(BOT_PREFIX + "Now you have " + tasks.size() + " tasks in the list.");
-            return true;
-        }
-        throw new BkxssException("I'm sorry, but I don't know what that means :-(");
+        task.markAsNotDone();
+        System.out.println(BOT_PREFIX + "OK, I've marked this task as not done yet:");
+        System.out.println(BOT_PREFIX + "  " + task);
+        return true;
+    }
+
+    /** Deletes one task and reports the new list size. */
+    private static boolean handleDeleteCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+        Task task = getTask(command.substring(DELETE_COMMAND_LENGTH), tasks);
+        tasks.remove(task);
+        System.out.println(BOT_PREFIX + "Noted. I've removed this task:");
+        System.out.println(BOT_PREFIX + "  " + task);
+        System.out.println(BOT_PREFIX + "Now you have " + tasks.size() + " tasks in the list.");
+        return true;
     }
 
     /** Requires every named parameter exactly once, in order, with a nonempty value. */
@@ -253,7 +273,7 @@ public class Bkxss {
     }
 
     /** Searches the task list and prints tasks matching the supplied keyword. */
-    private static void handleFindCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+    private static boolean handleFindCommand(String command, ArrayList<Task> tasks) throws BkxssException {
         String keyword = command.substring(FIND_COMMAND_LENGTH).trim();
         if (keyword.isBlank()) {
             throw new BkxssException("please provide a keyword to search for. Use: find KEYWORD");
@@ -264,10 +284,11 @@ public class Bkxss {
                 .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         IntStream.range(0, matchingTasks.size())
                 .forEach(index -> System.out.println(BOT_PREFIX + (index + 1) + "." + matchingTasks.get(index)));
+        return false;
     }
 
     /** Finds and prints the earliest free period in the user-supplied search range. */
-    private static void handleFindFreeCommand(String command, ArrayList<Task> tasks) throws BkxssException {
+    private static boolean handleFindFreeCommand(String command, ArrayList<Task> tasks) throws BkxssException {
         String[] parts = parseParameters(command.substring(FIND_FREE_COMMAND_LENGTH),
                 "findfree HOURS /from START /to END", "from", "to");
 
@@ -283,6 +304,7 @@ public class Bkxss {
         Optional<LocalDateTime> freeStart = FreeTimeFinder.findEarliestStart(
                 searchStart, searchEnd, requiredDuration, events);
         printFreeTimeResult(durationHours, searchStart, searchEnd, freeStart);
+        return false;
     }
 
     /** Returns a positive whole-number duration in hours. */

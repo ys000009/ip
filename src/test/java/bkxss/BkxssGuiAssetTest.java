@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import javax.imageio.ImageIO;
 
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ class BkxssGuiAssetTest {
     private static final String USER_AVATAR_PATH = "/images/cat-avatar.png";
     private static final String BOT_AVATAR_PATH = "/images/dog-avatar.png";
     private static final String BACKGROUND_PATH = "/images/chatbot_background.png";
+    private static final String MAIN_VIEW_PATH = "/view/MainWindow.fxml";
 
     @Test
     void avatarAssets_squarePngs_haveTransparentCornersAndOpaqueCenters() throws IOException {
@@ -30,6 +33,18 @@ class BkxssGuiAssetTest {
         assertTrue(background.getWidth() > 0);
         assertTrue(background.getHeight() > 0);
         assertTrue(alphaAt(background, background.getWidth() / 2, background.getHeight() / 2) > 0);
+    }
+
+    @Test
+    void mainViewResource_definesControllerAndRequiredChatControls() throws IOException {
+        String mainView = loadText(MAIN_VIEW_PATH);
+
+        assertTrue(mainView.contains("fx:controller=\"bkxss.MainWindow\""));
+        assertTrue(mainView.contains("fx:id=\"conversationScroll\""));
+        assertTrue(mainView.contains("fx:id=\"conversation\""));
+        assertTrue(mainView.contains("fx:id=\"commandInput\""));
+        assertTrue(mainView.contains("fx:id=\"sendButton\""));
+        assertTrue(mainView.contains("onAction=\"#sendCommand\""));
     }
 
     /** Checks the shape and alpha values needed for an avatar with a transparent circular crop. */
@@ -51,6 +66,14 @@ class BkxssGuiAssetTest {
         BufferedImage image = ImageIO.read(resource);
         assertNotNull(image);
         return image;
+    }
+
+    /** Loads a UTF-8 text resource and fails clearly when it is missing. */
+    private static String loadText(String resourcePath) throws IOException {
+        try (InputStream resource = BkxssGuiAssetTest.class.getResourceAsStream(resourcePath)) {
+            assertNotNull(resource);
+            return new String(resource.readAllBytes(), StandardCharsets.UTF_8);
+        }
     }
 
     /** Returns the unsigned alpha value at one pixel. */

@@ -1,6 +1,8 @@
 # Bkxss
 
-Bkxss is a chatbot application. At this stage, it displays a welcome message and exits.
+Bkxss is a JavaFX task assistant for managing todos, deadlines, and events. It
+supports persistent storage, task search, and finding free time between scheduled
+events. See the [user guide](docs/README.md) for the complete command reference.
 
 ## Setting up in Intellij
 
@@ -13,20 +15,11 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    1. If there are any further prompts, accept the defaults.
 1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
    In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Bkxss.java` file, right-click it, and choose `Run Bkxss.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
-   ```
-   ____________________________________________________________
-    ____  _                   
-   | __ )| | ____  _____ ___ 
-   |  _ \| |/ /\ \/ / __/ __|
-   | |_) |   <  >  <\__ \__ \
-   |____/|_|\_\/_/\_\___/___/
-   Hello! I'm Bkxss.
-   What can I do for you?
-   ____________________________________________________________
-   Bye. Hope to see you again soon!
-   ____________________________________________________________
-   ```
+1. After that, locate `src/main/java/bkxss/Launcher.java`, right-click it, and
+   choose `Run Launcher.main()`. If the code editor shows compile errors, try
+   restarting the IDE.
+
+The application opens a JavaFX chat window. Try `todo borrow book`, then `list`.
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
 
