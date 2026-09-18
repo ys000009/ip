@@ -23,8 +23,7 @@ your schedule.
 Bkxss saves every successful change automatically and reloads your tasks the
 next time it starts.
 
-> [!TIP]
-> Start with `todo borrow book`, then enter `list` to see the task you added.
+> **Tip:** Start with `todo borrow book`, then enter `list` to see the task you added.
 
 ## Command summary
 
